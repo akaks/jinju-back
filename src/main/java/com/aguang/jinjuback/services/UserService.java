@@ -1,6 +1,7 @@
 package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.dao.UserDao;
+import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,19 @@ public class UserService {
         return userDao.getUser(id);
     }
 
-    public String login(String username,String password){
+    public Result login(String username,String password){
+        Result result = new Result();
         UserInfo user = new UserInfo();
         user  = userDao.getUserByUsername(username);
         if(user == null){
-            return "用户不存在";
+            result.setError(null,"用户不存在");
+            return result;
         }else if(!password.equals(user.getPassword())){
-            return "密码错误";
+            result.setError(null,"密码错误");
+            return result;
         }
-        return "success";
+        user.setPassword(null);
+        result.setError(user,"登录成功");
+        return result;
     }
 }

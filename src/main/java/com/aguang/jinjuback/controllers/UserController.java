@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.UserInfo;
 import com.aguang.jinjuback.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public Result login(@RequestParam("username") String username, @RequestParam("password") String password) {
         return userService.login(username, password);
     }
 }
