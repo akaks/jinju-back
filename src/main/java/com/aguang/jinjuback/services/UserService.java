@@ -13,12 +13,29 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
-    public void createUser(String username,String password){
-        Long curTime = new Date().getTime();
-        userDao.createUser(username,password,curTime);
+    public String createUser(String username,String password){
+        UserInfo user = new UserInfo();
+        user  = userDao.getUserByUsername(username);
+        if(user ==null){
+            Long curTime = new Date().getTime();
+            userDao.createUser(username,password,curTime);
+            return "success";
+        }
+        return "用户名已存在";
     }
 
     public UserInfo getUser(Integer id){
         return userDao.getUser(id);
+    }
+
+    public String login(String username,String password){
+        UserInfo user = new UserInfo();
+        user  = userDao.getUserByUsername(username);
+        if(user == null){
+            return "用户不存在";
+        }else if(!password.equals(user.getPassword())){
+            return "密码错误";
+        }
+        return "success";
     }
 }

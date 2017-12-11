@@ -11,4 +11,6 @@ public interface UserDao {
     void createUser(@Param("username") String username,@Param("password") String password,@Param("curTime") Long curTime);
 
     UserInfo getUser(@Param("id") Integer id);
+
+    UserInfo getUserByUsername(@Param("username") String username);
 }

@@ -12,12 +12,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/createUser")
-    public void createUser(@RequestParam("username") String username,@RequestParam("password") String password){
-        userService.createUser(username,password);
+    public String createUser(@RequestParam("username") String username, @RequestParam("password") String password) {
+        return userService.createUser(username, password);
     }
 
     @GetMapping("/getUser/{id}")
     public UserInfo getUser(@PathVariable("id") Integer id) {
         return userService.getUser(id);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        return userService.login(username, password);
     }
 }
