@@ -3,13 +3,11 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/jinju
+    url: jdbc:mysql://localhost:3306/jinju_db
     username: root
     password: 930206
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
-info:
-  name: aguang
-  age: 25
-  height: 175
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
