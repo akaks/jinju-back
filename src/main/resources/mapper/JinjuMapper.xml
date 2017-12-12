@@ -10,4 +10,8 @@
         SELECT * FROM jinju_db.jinju WHERE jinju_id = #{id};
     </select>
 
+    <select id="getJinjuList" resultType="com.aguang.jinjuback.pojo.Jinju">
+        SELECT * FROM jinju_db.jinju LIMIT #{m},#{n};
+    </select>
+
 </mapper>
