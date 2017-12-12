@@ -13,7 +13,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/createUser")
-    public String createUser(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public Result createUser(@RequestParam("username") String username, @RequestParam("password") String password) {
         return userService.createUser(username, password);
     }
 
