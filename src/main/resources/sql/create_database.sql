@@ -1,0 +1,1 @@
+create database jinju_db default character set utf8;
