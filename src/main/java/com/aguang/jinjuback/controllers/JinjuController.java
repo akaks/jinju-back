@@ -1,11 +1,10 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.pojo.Jinju;
+import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.JinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class JinjuController {
@@ -24,7 +23,7 @@ public class JinjuController {
     }
 
     @GetMapping("/getJinjuList")
-    public List<Jinju> getJinjuList(@RequestParam("pageIndex") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
+    public Result getJinjuList(@RequestParam("pageIndex") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
         return jinjuService.getJinjuList(pageIndex, pageSize);
     }
 }
