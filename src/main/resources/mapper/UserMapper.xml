@@ -14,4 +14,8 @@
         SELECT user_id,username,password FROM jinju_db.jj_user WHERE username = #{username};
     </select>
 
+    <update id="updateUser" parameterType="com.aguang.jinjuback.pojo.UserInfo">
+        UPDATE jinju_db.jj_user SET username = #{username},tel = #{tel},email = #{email}, address = #{address}
+        WHERE user_id = #{user_id}
+    </update>
 </mapper>

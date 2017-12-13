@@ -13,4 +13,6 @@ public interface UserDao {
     UserInfo getUser(@Param("id") Integer id);
 
     UserInfo getUserByUsername(@Param("username") String username);
+
+    void updateUser(UserInfo userInfo);
 }

@@ -2,7 +2,7 @@ package com.aguang.jinjuback.pojo;
 
 public class UserInfo {
 
-    private Integer user_id;
+    private int user_id;
     private String username;
     private String password;
     private String tel;

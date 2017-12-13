@@ -55,4 +55,21 @@ public class UserService {
         result.setSuccess(user, "登录成功");
         return result;
     }
+
+    public Result updateUser(UserInfo userInfo){
+        Result result = new Result();
+        UserInfo user = userDao.getUser(userInfo.getUser_id());
+        if (user == null) {
+            result.setError(null, "用户不存在");
+            return result;
+        }
+        user = userDao.getUserByUsername(userInfo.getUsername());
+        if(user != null){
+            result.setError(null, "该用户名已存在，不要与别人一样哦~");
+            return result;
+        }
+        userDao.updateUser(userInfo);
+        result.setSuccess(user, "更新成功");
+        return result;
+    }
 }
