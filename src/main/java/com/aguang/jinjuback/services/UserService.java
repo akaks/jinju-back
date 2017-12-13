@@ -36,7 +36,7 @@ public class UserService {
             return result;
         }
         user.setPassword(null);
-        result.setSuccess(user, "用户数据成功");
+        result.setSuccess(user, "用户数据获取成功");
         return result;
     }
 

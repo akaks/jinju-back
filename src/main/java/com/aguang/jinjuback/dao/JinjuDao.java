@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Mapper
 @Repository
@@ -15,5 +15,7 @@ public interface JinjuDao {
 
     Jinju getJinju(Integer id);
 
-    List<Jinju> getJinjuList(@Param("m") Integer m, @Param("n") Integer n);
+    ArrayList<Jinju> getJinjuList(@Param("m") Integer m, @Param("n") Integer n);
+
+    Integer getListCount();
 }

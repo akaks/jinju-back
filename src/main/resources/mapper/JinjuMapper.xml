@@ -14,4 +14,8 @@
         SELECT * FROM jinju_db.jinju LIMIT #{m},#{n};
     </select>
 
+    <select id="getListCount" resultType="integer">
+        SELECT COUNT(*) FROM jinju_db.jinju;
+    </select>
+
 </mapper>

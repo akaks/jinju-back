@@ -7,7 +7,7 @@
     </insert>
 
     <select id="getUser" resultType="com.aguang.jinjuback.pojo.UserInfo">
-        SELECT user_id,username,password FROM jinju_db.jj_user WHERE user_id = #{id};
+        SELECT * FROM jinju_db.jj_user WHERE user_id = #{id};
     </select>
 
     <select id="getUserByUsername" resultType="com.aguang.jinjuback.pojo.UserInfo">
