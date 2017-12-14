@@ -12,11 +12,11 @@ public class UserInfo {
     private Long create_time;
     private Long update_time;
 
-    public Integer getUser_id() {
+    public int getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
 

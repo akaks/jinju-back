@@ -1,25 +1,26 @@
 package com.aguang.jinjuback.pojo;
 
 public class Jinju {
-    private Integer jinju_id;
-    private Integer user_id;
+    private int jinju_id;
+    private int user_id;
     private String content;
-    private Integer type;
+    private int type;
     private Long create_time;
+    private String username;
 
-    public Integer getJinju_id() {
+    public int getJinju_id() {
         return jinju_id;
     }
 
-    public void setJinju_id(Integer jinju_id) {
+    public void setJinju_id(int jinju_id) {
         this.jinju_id = jinju_id;
     }
 
-    public Integer getUser_id() {
+    public int getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
 
@@ -45,5 +46,13 @@ public class Jinju {
 
     public void setCreate_time(Long create_time) {
         this.create_time = create_time;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

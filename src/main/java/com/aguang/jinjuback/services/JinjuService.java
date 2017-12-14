@@ -15,15 +15,18 @@ public class JinjuService {
     @Autowired
     JinjuDao jinjuDao;
 
-    public void createJinju(Jinju jinju) {
+    public Result createJinju(Jinju jinju) {
         jinjuDao.createJinju(jinju);
+        Result result = new Result();
+        result.setSuccess(null, "创建成功");
+        return result;
     }
 
-    public Jinju getJinju(Integer id) {
+    public Jinju getJinju(int id) {
         return jinjuDao.getJinju(id);
     }
 
-    public Result getJinjuList(Integer pageIndex, Integer pageSize) {
+    public Result getJinjuList(int pageIndex, int pageSize) {
         Integer m = (pageIndex - 1) * pageSize;
         ArrayList<Jinju> arrayList = jinjuDao.getJinjuList(m, pageSize);
         Integer total = jinjuDao.getListCount();

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserDao {
     void createUser(@Param("username") String username,@Param("password") String password,@Param("curTime") Long curTime);
 
-    UserInfo getUser(@Param("id") Integer id);
+    UserInfo getUser(@Param("id") int id);
 
     UserInfo getUserByUsername(@Param("username") String username);
 

@@ -13,9 +13,9 @@ public interface JinjuDao {
 
     void createJinju(Jinju jinju);
 
-    Jinju getJinju(Integer id);
+    Jinju getJinju(int id);
 
-    ArrayList<Jinju> getJinjuList(@Param("m") Integer m, @Param("n") Integer n);
+    ArrayList<Jinju> getJinjuList(@Param("m") int m, @Param("n") int n);
 
-    Integer getListCount();
+    int getListCount();
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public class JinjuListDto {
 
     List<Jinju> jinjuList;
-    Integer total;
+    int total;
 
     public List<Jinju> getJinjuList() {
         return jinjuList;
@@ -17,11 +17,11 @@ public class JinjuListDto {
         this.jinjuList = jinjuList;
     }
 
-    public Integer getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 

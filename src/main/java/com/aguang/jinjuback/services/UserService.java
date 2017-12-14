@@ -28,7 +28,7 @@ public class UserService {
         return result;
     }
 
-    public Result getUser(Integer id) {
+    public Result getUser(int id) {
         Result result = new Result();
         UserInfo user = userDao.getUser(id);
         if (user == null) {
@@ -64,7 +64,7 @@ public class UserService {
             return result;
         }
         user = userDao.getUserByUsername(userInfo.getUsername());
-        if(user != null){
+        if(user != null && (user.getUser_id() != userInfo.getUser_id())){
             result.setError(null, "该用户名已存在，不要与别人一样哦~");
             return result;
         }

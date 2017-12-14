@@ -13,17 +13,17 @@ public class JinjuController {
     private JinjuService jinjuService;
 
     @PostMapping("/createJinju")
-    public void createJinju(Jinju jinju) {
-        jinjuService.createJinju(jinju);
+    public Result createJinju(@RequestBody Jinju jinju) {
+        return jinjuService.createJinju(jinju);
     }
 
     @GetMapping("/getJinju/{id}")
-    public Jinju getJinju(@PathVariable("id") Integer id) {
+    public Jinju getJinju(@PathVariable("id") int id) {
         return jinjuService.getJinju(id);
     }
 
     @GetMapping("/getJinjuList")
-    public Result getJinjuList(@RequestParam("pageIndex") Integer pageIndex, @RequestParam("pageSize") Integer pageSize) {
+    public Result getJinjuList(@RequestParam("pageIndex") int pageIndex, @RequestParam("pageSize") int pageSize) {
         return jinjuService.getJinjuList(pageIndex, pageSize);
     }
 }

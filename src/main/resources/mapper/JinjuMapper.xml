@@ -11,10 +11,11 @@
     </select>
 
     <select id="getJinjuList" resultType="com.aguang.jinjuback.pojo.Jinju">
-        SELECT * FROM jinju_db.jinju LIMIT #{m},#{n};
+        SELECT a.user_id,a.content,a.type,b.username FROM jinju_db.jinju a,jinju_db.jj_user b
+        WHERE a.user_id = b.user_id LIMIT #{m},#{n};
     </select>
 
-    <select id="getListCount" resultType="integer">
+    <select id="getListCount" resultType="int">
         SELECT COUNT(*) FROM jinju_db.jinju;
     </select>
 
