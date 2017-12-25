@@ -42,7 +42,8 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
             if (!flag) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
-                response.getWriter().print("AccessToken ERROR");
+                response.setContentType("application/json");
+                response.getWriter().print("{\"code\":403, \"message\":\"please login\"}");
             }
         }
 
