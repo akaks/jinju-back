@@ -1,8 +1,10 @@
 package com.aguang.jinjuback.dao;
 
+import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -12,7 +14,13 @@ public interface UserDao {
 
     UserInfo getUser(@Param("id") int id);
 
-    UserInfo getUserByUsername(@Param("username") String username);
+//    UserInfo getUserByUsername(@Param("username") String username);
 
     void updateUser(UserInfo userInfo);
+
+    @Select("select * from jj_user where username=#{username}")
+    User getUserByUsername(String username);
+
+    @Select("select * from jj_user where user_id=#{userId}")
+    User getUserById(Integer userId);
 }

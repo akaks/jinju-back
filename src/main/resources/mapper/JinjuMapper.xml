@@ -6,17 +6,52 @@
         INSERT INTO jinju_db.jinju(user_id,content,type,create_time) VALUES(#{user_id},#{content},#{type},#{create_time});
     </insert>
 
-    <select id="getJinju" resultType="com.aguang.jinjuback.pojo.Jinju">
+    <select id="getJinju" resultType="com.aguang.jinjuback.model.Jinju">
         SELECT * FROM jinju_db.jinju WHERE jinju_id = #{id};
     </select>
 
-    <select id="getJinjuList" resultType="com.aguang.jinjuback.pojo.Jinju">
+    <select id="getJinjuList" resultType="com.aguang.jinjuback.model.Jinju">
         SELECT a.user_id,a.content,a.type,b.username FROM jinju_db.jinju a,jinju_db.jj_user b
         WHERE a.user_id = b.user_id LIMIT #{m},#{n};
     </select>
 
-    <select id="getListCount" resultType="int">
-        SELECT COUNT(*) FROM jinju_db.jinju;
+    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+            j.jinju_id,
+            j.content,
+            j.type,
+            j.up_vote_count,
+            j.down_vote_count,
+            l.type AS up_or_down_vote,
+            j.collect_count,
+            c.collect as is_collect,
+            j.update_time,
+            u.user_id,
+            u.username
+        FROM
+            jinju j
+        LEFT JOIN jj_user u ON j.user_id = u.user_id
+        LEFT JOIN jj_vote l ON j.jinju_id = l.jinju_id
+        AND l.user_id = #{userId}
+        LEFT JOIN jj_collect c ON j.jinju_id = c.jinju_id
+        AND c.user_id = #{userId}
+
+        LIMIT #{m},#{n}
+    </select>
+
+    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+        j.jinju_id,
+        j.content,
+        j.type,
+        j.up_vote_count,
+        j.down_vote_count,
+        j.collect_count,
+        j.update_time
+        FROM
+        jinju j
+
+        LIMIT #{m},#{n}
     </select>
 
 </mapper>

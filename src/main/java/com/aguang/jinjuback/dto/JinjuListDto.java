@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.dto;
 
-import com.aguang.jinjuback.pojo.Jinju;
+import com.aguang.jinjuback.model.Jinju;
 
 import java.util.List;
 

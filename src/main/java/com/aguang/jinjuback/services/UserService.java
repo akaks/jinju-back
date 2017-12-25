@@ -1,6 +1,7 @@
 package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.dao.UserDao;
+import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class UserService {
     public Result createUser(String username, String password) {
         Result result = new Result();
         UserInfo user = new UserInfo();
-        user = userDao.getUserByUsername(username);
+//        user = userDao.getUserByUsername(username);
         if (user == null) {
             Long curTime = new Date().getTime();
             userDao.createUser(username, password, curTime);
@@ -42,8 +43,7 @@ public class UserService {
 
     public Result login(String username, String password) {
         Result result = new Result();
-        UserInfo user = new UserInfo();
-        user = userDao.getUserByUsername(username);
+        User user = userDao.getUserByUsername(username);
         if (user == null) {
             result.setError(null, "用户不存在");
             return result;
@@ -63,7 +63,7 @@ public class UserService {
             result.setError(null, "用户不存在");
             return result;
         }
-        user = userDao.getUserByUsername(userInfo.getUsername());
+//        user = userDao.getUserByUsername(userInfo.getUsername());
         if(user != null && (user.getUser_id() != userInfo.getUser_id())){
             result.setError(null, "该用户名已存在，不要与别人一样哦~");
             return result;
@@ -71,5 +71,10 @@ public class UserService {
         userDao.updateUser(userInfo);
         result.setSuccess(user, "更新成功");
         return result;
+    }
+
+    public boolean hasUser(Integer userId) {
+        User user = userDao.getUserById(userId);
+        return user != null;
     }
 }
