@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AccessTokenVerifyInterceptor.class);
+    public final static Logger LOG = LoggerFactory.getLogger(AccessTokenVerifyInterceptor.class);
 
     @Autowired
     private UserService userService;
@@ -27,13 +27,15 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
         boolean flag = true;
 
-        String username = (String) request.getSession().getAttribute("username");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
 
-        if(!request.getRequestURL().toString().contains("login")) {
-            if (StringUtils.isBlank(username)) {
+        String requestURL = request.getRequestURL().toString();
+
+        if(!( requestURL.contains("/user") || requestURL.contains("/getJinjuList")) ) {
+            if (StringUtils.isBlank(userId)) {
                 flag = false;
             } else {
-                if (!userService.hasUser(username)) {
+                if (!userService.hasUser(userId)) {
                     flag = false;
                 }
             }

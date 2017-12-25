@@ -2,9 +2,20 @@ package com.aguang.jinjuback.pojo;
 
 public class Result {
 
+    public final static Integer OK = 0;
+    public final static Integer NG = 1;
+
     private Integer code;
     private Object data;
     private String message;
+
+    public Result() {
+        this.code = OK;
+    }
+
+    public Result(Integer code) {
+        this.code = code;
+    }
 
     public Integer getCode() {
         return code;
