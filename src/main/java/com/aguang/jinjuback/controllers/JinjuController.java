@@ -6,8 +6,6 @@ import com.aguang.jinjuback.services.JinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/jinju")
 public class JinjuController extends BaseController {
@@ -35,16 +33,11 @@ public class JinjuController extends BaseController {
         return jinjuService.getJinjuList(pageIndex, pageSize, getUserId());
     }
 
-    @GetMapping("/list")
-    public List<Jinju> getList() {
-        return jinjuService.getList();
-    }
-
     /**
      * 点赞
      * @return
      */
-    @GetMapping("/upVote/{jijuId}")
+    @PostMapping("/upVote/{jijuId}")
     public Result upVote(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.upVote(jijuId, getUserId());
     }
@@ -53,7 +46,7 @@ public class JinjuController extends BaseController {
      * 取消点赞
      * @return
      */
-    @GetMapping("/cancelUpVote/{jijuId}")
+    @PostMapping("/cancelUpVote/{jijuId}")
     public Result cancelUpVote(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.cancelUpVote(jijuId, getUserId());
     }
@@ -62,7 +55,7 @@ public class JinjuController extends BaseController {
      * 点踩
      * @return
      */
-    @GetMapping("/downVote/{jijuId}")
+    @PostMapping("/downVote/{jijuId}")
     public Result downVote(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.downVote(jijuId, getUserId());
     }
@@ -71,7 +64,7 @@ public class JinjuController extends BaseController {
      * 取消点踩
      * @return
      */
-    @GetMapping("/cancelDownVote/{jijuId}")
+    @PostMapping("/cancelDownVote/{jijuId}")
     public Result cancelDownVote(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.cancelDownVote(jijuId, getUserId());
     }
@@ -80,7 +73,7 @@ public class JinjuController extends BaseController {
      * 点赞变点踩
      * @return
      */
-    @GetMapping("/upVoteToDown/{jijuId}")
+    @PostMapping("/upVoteToDown/{jijuId}")
     public Result upVoteToDown(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.upVoteToDown(jijuId, getUserId());
     }
@@ -89,7 +82,7 @@ public class JinjuController extends BaseController {
      * 点踩变点赞
      * @return
      */
-    @GetMapping("/downVoteToUp/{jijuId}")
+    @PostMapping("/downVoteToUp/{jijuId}")
     public Result downVoteToUp(@PathVariable("jijuId") Integer jijuId) {
         return jinjuService.downVoteToUp(jijuId, getUserId());
     }
@@ -98,7 +91,7 @@ public class JinjuController extends BaseController {
      * 收藏
      * @return
      */
-    @GetMapping("/collect/{jijuId}")
+    @PostMapping("/collect/{jijuId}")
     public Result collect() {
         return null;
     }
@@ -107,7 +100,7 @@ public class JinjuController extends BaseController {
      * 取消收藏
      * @return
      */
-    @GetMapping("/cancelCollect/{jijuId}")
+    @PostMapping("/cancelCollect/{jijuId}")
     public Result cancelCollect() {
         return null;
     }
