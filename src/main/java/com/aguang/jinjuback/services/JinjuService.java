@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class JinjuService {
@@ -42,9 +41,12 @@ public class JinjuService {
         Integer m = (pageIndex - 1) * pageSize;
         ArrayList<JinjuInfo> list = null;
 
+        // 当前有登录用户，需要取出该用户是否有点赞、收藏等信息
         if(userId != null) {
             list = jinjuDao.listByPageWithUserId(m, pageSize, userId);
-        } else {
+        }
+        // 当前没有登录用户，则直接取出金句列表
+        else {
             list = jinjuDao.listByPageWithoutUserId(m, pageSize);
         }
 
@@ -55,11 +57,6 @@ public class JinjuService {
         Result result = new Result();
         result.setSuccess(pageInfo, "金句列表数据成功");
         return result;
-    }
-
-    public List<Jinju> getList() {
-        List<Jinju> jinju = jinjuDao.getList();
-        return jinju;
     }
 
     /**

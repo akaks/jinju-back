@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Mapper
 @Repository
@@ -24,9 +23,6 @@ public interface JinjuDao {
 
     @Select("SELECT COUNT(*) FROM jinju")
     int getListCount();
-
-    @Select("SELECT * FROM jinju")
-    List<Jinju> getList();
 
     @Insert("INSERT INTO `jj_vote`(jinju_id, user_id, type, create_time, update_time) VALUES (#{jijuId}, #{userId}, #{type}, #{currentTime}, #{currentTime})")
     Integer createVote(@Param("jijuId") Integer jijuId,
