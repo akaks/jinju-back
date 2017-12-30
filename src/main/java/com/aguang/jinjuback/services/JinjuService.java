@@ -6,6 +6,7 @@ import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.pojo.constants.IsDeleteConstant;
 import com.aguang.jinjuback.pojo.constants.VoteConstant;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.slf4j.Logger;
@@ -25,18 +26,61 @@ public class JinjuService {
     @Autowired
     JinjuDao jinjuDao;
 
-    public Result createJinju(Jinju jinju) {
-        jinjuDao.createJinju(jinju);
+    /**
+     * 创建金句
+     * @param jinju
+     * @param userId
+     * @return
+     */
+    public Result createJinju(Jinju jinju, Integer userId) {
         Result result = new Result();
-        result.setSuccess(null, "创建成功");
+        try {
+            Long currentTimeForInt = DateUtils.getCurrentTimeForInt();
+
+            jinju.setUserId(userId);
+            jinju.setUpVoteCount(0);
+            jinju.setDownVoteCount(0);
+            jinju.setCollectCount(0);
+            jinju.setCommentCount(0);
+            jinju.setCreateTime(currentTimeForInt);
+            jinju.setUpdateTime(currentTimeForInt);
+            jinju.setIsDelete(IsDeleteConstant.UN_DELETE);
+
+            jinjuDao.createJinju(jinju);
+            result.setSuccess(null, "创建成功");
+        } catch (Exception e) {
+            result.setError(null, "创建失败");
+            e.printStackTrace();
+        }
         return result;
     }
 
-    public Jinju getJinju(int id) {
-        Jinju jinju = jinjuDao.getJinju(id);
+    /**
+     * 获取金句信息
+     * @param id
+     * @return
+     */
+    public JinjuInfo getJinju(Integer id, Integer userId) {
+
+        JinjuInfo jinju = null;
+        // 当前有登录用户，需要取出该用户是否有点赞、收藏等信息
+        if(userId != null) {
+            jinju = jinjuDao.getJinjuWithUserId(id, userId);
+        }
+        // 当前没有登录用户，则直接取出金句列表
+        else {
+            jinju = jinjuDao.getJinjuWithoutUserId(id);
+        }
         return jinju;
     }
 
+    /**
+     * 获取金桔句列表
+     * @param pageIndex
+     * @param pageSize
+     * @param userId
+     * @return
+     */
     public Result getJinjuList(int pageIndex, int pageSize, Integer userId) {
         Integer m = (pageIndex - 1) * pageSize;
         ArrayList<JinjuInfo> list = null;
@@ -220,6 +264,58 @@ public class JinjuService {
             result.setCode(Result.NG);
             result.setMessage("点踩变点赞失败");
             LOG.error("点踩变点赞失败", e);
+        }
+        return result;
+    }
+
+    /**
+     * 收藏
+     * @param jijuId
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public Result collect(Integer jijuId, Integer userId) {
+        Result result = new Result();
+        try {
+            jinjuDao.createCollect(jijuId, userId, 1,DateUtils.getCurrentTimeForInt());
+
+            jinjuDao.increaseCollect(jijuId);
+
+            result.setMessage("收藏成功!");
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            result.setCode(Result.NG);
+            result.setMessage("收藏失败!");
+            LOG.error("收藏成功!", e);
+        }
+        return result;
+    }
+
+    /**
+     * 取消收藏
+     * @param jijuId
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public Result cancelCollect(Integer jijuId, Integer userId) {
+        Result result = new Result();
+        try {
+            Integer affectCount = jinjuDao.deleteCollect(jijuId, userId);
+
+            if(affectCount == 0) {
+                throw new CustomException("当前没有收藏，不可取消!");
+            }
+
+            jinjuDao.decreaseCollect(jijuId);
+
+            result.setMessage("取消收藏成功!");
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            result.setCode(Result.NG);
+            result.setMessage("取消收藏失败!");
+            LOG.error("取消收藏失败!", e);
         }
         return result;
     }
