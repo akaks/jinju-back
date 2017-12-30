@@ -38,7 +38,7 @@ public class JinjuController extends BaseController {
     public Result create(@RequestBody  @Valid Jinju jinju, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             Result result = new Result();
-            result.setError(null, bindingResult.getAllErrors().get(0).toString());
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
             return result;
         }
         return jinjuService.createJinju(jinju, getUserId());

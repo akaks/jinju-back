@@ -18,8 +18,6 @@ public class Jinju {
 
     /* 类型 */
     @NotNull
-    @Min(value = 1)
-    @Max(value = 3)
     private Integer type;
 
     /* 内容 */
