@@ -95,14 +95,14 @@ public interface JinjuDao {
      * 收藏总数+1
      * @param jijuId
      */
-    @Update("update `jinju` set comment_count=comment_count+1 where jinju_id=#{jijuId}")
+    @Update("update `jinju` set collect_count=collect_count+1 where jinju_id=#{jijuId}")
     void increaseCollect(Integer jijuId);
 
     /**
      * 收藏总数+1
      * @param jijuId
      */
-    @Update("update `jinju` set comment_count=comment_count-1 where jinju_id=#{jijuId}")
+    @Update("update `jinju` set collect_count=collect_count-1 where jinju_id=#{jijuId}")
     void decreaseCollect(Integer jijuId);
 
 
