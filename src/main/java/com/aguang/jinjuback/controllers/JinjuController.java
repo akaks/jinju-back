@@ -1,10 +1,14 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.model.Jinju;
+import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.JinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/jinju")
@@ -14,23 +18,40 @@ public class JinjuController extends BaseController {
     private JinjuService jinjuService;
 
     /**
+     * 查询金句列表
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/list")
+    public Result list(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex,
+                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return jinjuService.getJinjuList(pageIndex, pageSize, getUserId());
+    }
+
+    /**
      * 创建金句
      * @param jinju
      * @return
      */
     @PostMapping("/create")
-    public Result createJinju(@RequestBody Jinju jinju) {
-        return jinjuService.createJinju(jinju);
+    public Result create(@RequestBody  @Valid Jinju jinju, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).toString());
+            return result;
+        }
+        return jinjuService.createJinju(jinju, getUserId());
     }
 
-    @GetMapping("/getJinju/{id}")
-    public Jinju getJinju(@PathVariable("id") int id) {
-        return jinjuService.getJinju(id);
-    }
-
-    @GetMapping("/getJinjuList")
-    public Result getJinjuList(@RequestParam("pageIndex") int pageIndex, @RequestParam("pageSize") int pageSize) {
-        return jinjuService.getJinjuList(pageIndex, pageSize, getUserId());
+    /**
+     * 获取金句信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/get/{id}")
+    public JinjuInfo getJinju(@PathVariable("id") Integer id) {
+        return jinjuService.getJinju(id, getUserId());
     }
 
     /**
@@ -92,8 +113,8 @@ public class JinjuController extends BaseController {
      * @return
      */
     @PostMapping("/collect/{jijuId}")
-    public Result collect() {
-        return null;
+    public Result collect(@PathVariable("jijuId") Integer jijuId) {
+        return jinjuService.collect(jijuId, getUserId());
     }
 
     /**
@@ -101,7 +122,7 @@ public class JinjuController extends BaseController {
      * @return
      */
     @PostMapping("/cancelCollect/{jijuId}")
-    public Result cancelCollect() {
-        return null;
+    public Result cancelCollect(@PathVariable("jijuId") Integer jijuId) {
+        return jinjuService.cancelCollect(jijuId, getUserId());
     }
 }

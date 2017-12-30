@@ -26,7 +26,7 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public Result login(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
         Result result = userService.login(username, password);
         request.getSession().setAttribute("userId", ((User)result.getData()).getUserId());

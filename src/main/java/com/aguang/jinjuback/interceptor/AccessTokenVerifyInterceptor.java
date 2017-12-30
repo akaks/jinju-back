@@ -31,7 +31,10 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
         String requestURL = request.getRequestURL().toString();
 
-        if(!( requestURL.contains("/user") || requestURL.contains("/getJinjuList")) ) {
+        if(!( requestURL.contains("/user")
+                || requestURL.contains("/jinju/list")
+                || requestURL.contains("/get")
+        ) ) {
             if (StringUtils.isBlank(userId)) {
                 flag = false;
             } else {

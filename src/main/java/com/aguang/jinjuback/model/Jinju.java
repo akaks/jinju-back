@@ -1,47 +1,68 @@
 package com.aguang.jinjuback.model;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * 金句表（jinju）
  */
 public class Jinju {
 
     /* 主键 */
-    private int jinjuId;
+    private Integer jinjuId;
 
     /* 类型 */
-    private int type;
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 3)
+    private Integer type;
 
     /* 内容 */
+    @NotNull
+    @Length(min = 10, max = 500, message = "字数必须在10~500之间")
     private String content;
 
     /* 点赞总数 */
-    private int upVoteCount;
+    private Integer upVoteCount;
 
     /* 点踩总睡 */
-    private int downVoteCount;
+    private Integer downVoteCount;
 
     /* 收藏总数 */
-    private int collectCount;
+    private Integer collectCount;
+
+    private Integer commentCount;
 
     /* 用户Id */
-    private int userId;
+    private Integer userId;
 
     /* 创建时间 */
-    private int createTime;
+    private long createTime;
 
-    public int getJinjuId() {
+    /* 更新时间 */
+    private long updateTime;
+
+    /* 区分删除 1：删除 0：未删除 */
+    private Integer isDelete;
+
+    public Integer getJinjuId() {
         return jinjuId;
     }
 
-    public void setJinjuId(int jinjuId) {
+    public void setJinjuId(Integer jinjuId) {
         this.jinjuId = jinjuId;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -53,43 +74,67 @@ public class Jinju {
         this.content = content;
     }
 
-    public int getUpVoteCount() {
+    public Integer getUpVoteCount() {
         return upVoteCount;
     }
 
-    public void setUpVoteCount(int upVoteCount) {
+    public void setUpVoteCount(Integer upVoteCount) {
         this.upVoteCount = upVoteCount;
     }
 
-    public int getDownVoteCount() {
+    public Integer getDownVoteCount() {
         return downVoteCount;
     }
 
-    public void setDownVoteCount(int downVoteCount) {
+    public void setDownVoteCount(Integer downVoteCount) {
         this.downVoteCount = downVoteCount;
     }
 
-    public int getCollectCount() {
+    public Integer getCollectCount() {
         return collectCount;
     }
 
-    public void setCollectCount(int collectCount) {
+    public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
     }
 
-    public int getUserId() {
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
     }
 }
