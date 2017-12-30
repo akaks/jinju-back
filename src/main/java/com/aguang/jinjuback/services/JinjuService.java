@@ -142,7 +142,7 @@ public class JinjuService {
                 jinjuDao.decreaseUpVote(jijuId);
             }
 
-            result.setMessage("操作成功");
+            result.setSuccess("操作成功");
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             result.setError("操作失败");
@@ -193,7 +193,7 @@ public class JinjuService {
                 jinjuDao.decreaseDownVote(jijuId);
             }
 
-            result.setMessage("操作成功");
+            result.setSuccess("操作成功");
 
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -237,7 +237,7 @@ public class JinjuService {
                 jinjuDao.decreaseCollect(jijuId);
             }
 
-            result.setMessage("操作成功!");
+            result.setSuccess("操作成功!");
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             result.setError("操作失败");
