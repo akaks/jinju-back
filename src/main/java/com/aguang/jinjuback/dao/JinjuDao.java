@@ -31,7 +31,7 @@ public interface JinjuDao {
     /**
      * 创建点赞、踩
      */
-    @Insert("INSERT INTO `jj_vote`(jinju_id, user_id, type, create_time, update_time) VALUES (#{jijuId}, #{userId}, #{type}, #{currentTime}, #{currentTime})")
+    @Insert("INSERT INTO `jj_vote`(jinju_id, user_id, type, create_time) VALUES (#{jijuId}, #{userId}, #{type}, #{currentTime})")
     Integer createVote(@Param("jijuId") Integer jijuId,
                     @Param("userId") Integer userId,
                     @Param("type") Integer type,
@@ -40,8 +40,14 @@ public interface JinjuDao {
     /**
      * 删除点赞、踩
      */
-    @Delete("delete from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} ")
-    Integer deleteVote(@Param("jijuId") Integer jijuId, @Param("userId") Integer userId);
+//    @Delete("delete from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} ")
+//    Integer deleteVote(@Param("jijuId") Integer jijuId, @Param("userId") Integer userId);
+
+    /**
+     * 删除点赞、踩
+     */
+    @Delete("delete from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} and type=#{type}")
+    Integer deleteVote(@Param("jijuId") Integer jijuId, @Param("userId") Integer userId, @Param("type") Integer type);
 
     /**
      * 更新点赞、踩
@@ -52,6 +58,11 @@ public interface JinjuDao {
                     @Param("newType") Integer newType,
                     @Param("oldType") Integer oldType,
                     @Param("currentTime") Long currentTime);
+
+    @Select("select 1 from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} and type=#{type}")
+    Integer hasVote(@Param("jijuId") Integer jijuId,
+                    @Param("userId") Integer userId,
+                    @Param("type") Integer type);
 
     /**
      * 点赞数加1
@@ -109,4 +120,6 @@ public interface JinjuDao {
      */
     @Update("update `jinju` set comment_count=comment_count-1 where jinju_id=#{jijuId}")
     void decreaseCollect(Integer jijuId);
+
+
 }
