@@ -1,21 +1,21 @@
 package com.aguang.jinjuback.pojo;
 
+/**
+ * 返回数据类
+ */
 public class Result {
 
     public final static Integer OK = 0;
     public final static Integer NG = -1;
 
+    /* 返回编号 */
     private Integer code;
-    private Object data;
+
+    /* 返回消息 */
     private String message;
 
-    public Result() {
-        this.code = OK;
-    }
-
-    public Result(Integer code) {
-        this.code = code;
-    }
+    /* 数据 */
+    private Object data;
 
     public Integer getCode() {
         return code;

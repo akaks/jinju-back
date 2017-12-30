@@ -40,24 +40,8 @@ public interface JinjuDao {
     /**
      * 删除点赞、踩
      */
-//    @Delete("delete from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} ")
-//    Integer deleteVote(@Param("jijuId") Integer jijuId, @Param("userId") Integer userId);
-
-    /**
-     * 删除点赞、踩
-     */
     @Delete("delete from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} and type=#{type}")
     Integer deleteVote(@Param("jijuId") Integer jijuId, @Param("userId") Integer userId, @Param("type") Integer type);
-
-    /**
-     * 更新点赞、踩
-     */
-    @Update("update `jj_vote` set type=#{newType}, update_time=#{currentTime} where jinju_id=#{jijuId} and user_id=#{userId} and type=#{oldType}")
-    Integer updateVote(@Param("jijuId") Integer jijuId,
-                    @Param("userId") Integer userId,
-                    @Param("newType") Integer newType,
-                    @Param("oldType") Integer oldType,
-                    @Param("currentTime") Long currentTime);
 
     @Select("select 1 from `jj_vote` where jinju_id=#{jijuId} and user_id=#{userId} and type=#{type}")
     Integer hasVote(@Param("jijuId") Integer jijuId,

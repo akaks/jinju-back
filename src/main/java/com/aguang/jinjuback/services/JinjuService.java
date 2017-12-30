@@ -6,6 +6,7 @@ import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.pojo.constants.ConfirmOrCalcelConstant;
 import com.aguang.jinjuback.pojo.constants.IsDeleteConstant;
 import com.aguang.jinjuback.pojo.constants.VoteConstant;
 import com.aguang.jinjuback.utils.DateUtils;
@@ -105,34 +106,35 @@ public class JinjuService {
 
     /**
      * 点赞
-     * @param jijuId
-     * @param userId
+     * @param jijuId    金句id
+     * @param type      区分确认和取消
+     * @param userId    用户id
      * @return
      */
     @Transactional
     public Result upVote(Integer jijuId, String type, Integer userId) {
         Result result = new Result();
         try {
-            // 1:点赞
-            if("1".equals(type)) {
+            // 1:确认赞
+            if(ConfirmOrCalcelConstant.CONFIRM.equals(type)) {
 
-                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.DOWN);
                 // 判断当前是否存在踩，如果存在，则删除踩
+                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.DOWN);
                 if(hasVote != null) {
                     jinjuDao.deleteVote(jijuId, userId, VoteConstant.DOWN);
-
                     jinjuDao.decreaseDownVote(jijuId);
                 }
 
+                // 创建赞
                 jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTimeForInt());
-
                 jinjuDao.increaseUpVote(jijuId);
 
             }
-            // 1:取消赞
-            else if("2".equals(type)) {
-                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.UP);
+            // 2:取消赞
+            else if(ConfirmOrCalcelConstant.CALCEL.equals(type)) {
 
+                // 删除赞
+                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.UP);
                 if(affectCount == 0) {
                     throw new CustomException("当前没有点赞，不可取消!");
                 }
@@ -154,8 +156,9 @@ public class JinjuService {
 
     /**
      * 踩
-     * @param jijuId
-     * @param userId
+     * @param jijuId    金句id
+     * @param type      区分确认和取消
+     * @param userId    用户id
      * @return
      */
     @Transactional
@@ -163,26 +166,26 @@ public class JinjuService {
         Result result = new Result();
         try {
 
-            // 1:点踩
-            if("1".equals(type)) {
+            // 1:确认踩
+            if(ConfirmOrCalcelConstant.CONFIRM.equals(type)) {
 
-                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.UP);
                 // 判断当前是否存在赞，如果存在，则删除赞
+                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.UP);
                 if(hasVote != null) {
                     jinjuDao.deleteVote(jijuId, userId, VoteConstant.UP);
-
                     jinjuDao.decreaseUpVote(jijuId);
                 }
 
+                // 创建踩
                 jinjuDao.createVote(jijuId, userId, VoteConstant.DOWN, DateUtils.getCurrentTimeForInt());
-
                 jinjuDao.increaseDownVote(jijuId);
 
             }
-            // 1:取消踩
-            else if("2".equals(type)) {
-                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.DOWN);
+            // 2:取消踩
+            else if(ConfirmOrCalcelConstant.CALCEL.equals(type)) {
 
+                // 删除踩
+                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.DOWN);
                 if(affectCount == 0) {
                     throw new CustomException("当前没有点赞，不可取消!");
                 }
@@ -205,53 +208,45 @@ public class JinjuService {
 
     /**
      * 收藏
-     * @param jijuId
-     * @param userId
+     * @param jijuId    金句id
+     * @param type      区分确认和取消
+     * @param userId    用户id
      * @return
      */
     @Transactional
-    public Result collect(Integer jijuId, Integer userId) {
+    public Result collect(Integer jijuId, String type, Integer userId) {
         Result result = new Result();
         try {
-            jinjuDao.createCollect(jijuId, userId, 1,DateUtils.getCurrentTimeForInt());
 
-            jinjuDao.increaseCollect(jijuId);
+            // 1:确认收藏
+            if(ConfirmOrCalcelConstant.CONFIRM.equals(type)) {
 
-            result.setMessage("收藏成功!");
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("收藏失败!");
-            LOG.error("收藏成功!", e);
-        }
-        return result;
-    }
+                // 创建收藏
+                jinjuDao.createCollect(jijuId, userId, 1,DateUtils.getCurrentTimeForInt());
+                jinjuDao.increaseCollect(jijuId);
+            }
+            // 2:取消收藏
+            else if(ConfirmOrCalcelConstant.CALCEL.equals(type)) {
 
-    /**
-     * 取消收藏
-     * @param jijuId
-     * @param userId
-     * @return
-     */
-    @Transactional
-    public Result cancelCollect(Integer jijuId, Integer userId) {
-        Result result = new Result();
-        try {
-            Integer affectCount = jinjuDao.deleteCollect(jijuId, userId);
+                // 删除收藏
+                Integer affectCount = jinjuDao.deleteCollect(jijuId, userId);
+                if(affectCount == 0) {
+                    throw new CustomException("当前没有收藏，不可取消!");
+                }
 
-            if(affectCount == 0) {
-                throw new CustomException("当前没有收藏，不可取消!");
+                jinjuDao.decreaseCollect(jijuId);
             }
 
-            jinjuDao.decreaseCollect(jijuId);
-
-            result.setMessage("取消收藏成功!");
+            result.setMessage("操作成功!");
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("取消收藏失败!");
-            LOG.error("取消收藏失败!", e);
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
+            LOG.error("操作失败!", e);
         }
         return result;
     }
+
 }
