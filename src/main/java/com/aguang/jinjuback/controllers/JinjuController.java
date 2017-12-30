@@ -77,16 +77,7 @@ public class JinjuController extends BaseController {
      * @return
      */
     @PostMapping("/collect/{jijuId}")
-    public Result collect(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.collect(jijuId, getUserId());
-    }
-
-    /**
-     * 取消收藏
-     * @return
-     */
-    @PostMapping("/cancelCollect/{jijuId}")
-    public Result cancelCollect(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.cancelCollect(jijuId, getUserId());
+    public Result collect(@PathVariable("jijuId") Integer jijuId, @RequestParam("type") String type) {
+        return jinjuService.collect(jijuId, type, getUserId());
     }
 }

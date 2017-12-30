@@ -11,5 +11,4 @@ public class VoteConstant {
     /* 踩 */
     public final static Integer DOWN = 2;
 
-
 }
