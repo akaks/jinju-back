@@ -110,160 +110,95 @@ public class JinjuService {
      * @return
      */
     @Transactional
-    public Result upVote(Integer jijuId, Integer userId) {
+    public Result upVote(Integer jijuId, String type, Integer userId) {
         Result result = new Result();
         try {
-            jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTimeForInt());
+            // 1:点赞
+            if("1".equals(type)) {
 
-            jinjuDao.increaseUpVote(jijuId);
+                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.DOWN);
+                // 判断当前是否存在踩，如果存在，则删除踩
+                if(hasVote != null) {
+                    jinjuDao.deleteVote(jijuId, userId, VoteConstant.DOWN);
 
-            result.setMessage("点赞成功");
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("点赞失败");
-            LOG.error("点赞失败", e);
-        }
-        return result;
-    }
+                    jinjuDao.decreaseDownVote(jijuId);
+                }
 
-    /**
-     * 取消赞
-     * @param jijuId
-     * @param userId
-     * @return
-     */
-    @Transactional
-    public Result cancelUpVote(Integer jijuId, Integer userId) {
-        Result result = new Result();
-        try {
-            Integer affectCount = jinjuDao.deleteVote(jijuId, userId);
+                jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTimeForInt());
 
-            if(affectCount == 0) {
-                throw new CustomException("当前没有点赞，不可取消!");
+                jinjuDao.increaseUpVote(jijuId);
+
+            }
+            // 1:取消赞
+            else if("2".equals(type)) {
+                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.UP);
+
+                if(affectCount == 0) {
+                    throw new CustomException("当前没有点赞，不可取消!");
+                }
+
+                jinjuDao.decreaseUpVote(jijuId);
             }
 
-            jinjuDao.decreaseUpVote(jijuId);
-
-            result.setMessage("取消赞成功");
+            result.setMessage("操作成功");
         } catch (Exception e) {
-            // 手动回滚
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("取消赞失败");
-            LOG.error("取消赞失败", e);
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
+            LOG.error("操作失败", e);
         }
         return result;
     }
 
     /**
-     * 点踩
+     * 踩
      * @param jijuId
      * @param userId
      * @return
      */
     @Transactional
-    public Result downVote(Integer jijuId, Integer userId) {
+    public Result downVote(Integer jijuId, String type, Integer userId) {
         Result result = new Result();
         try {
-            jinjuDao.createVote(jijuId, userId, VoteConstant.DOWN, DateUtils.getCurrentTimeForInt());
 
-            jinjuDao.increaseDownVote(jijuId);
+            // 1:点踩
+            if("1".equals(type)) {
 
-            result.setMessage("点踩成功");
+                Integer hasVote = jinjuDao.hasVote(jijuId, userId, VoteConstant.UP);
+                // 判断当前是否存在赞，如果存在，则删除赞
+                if(hasVote != null) {
+                    jinjuDao.deleteVote(jijuId, userId, VoteConstant.UP);
+
+                    jinjuDao.decreaseUpVote(jijuId);
+                }
+
+                jinjuDao.createVote(jijuId, userId, VoteConstant.DOWN, DateUtils.getCurrentTimeForInt());
+
+                jinjuDao.increaseDownVote(jijuId);
+
+            }
+            // 1:取消踩
+            else if("2".equals(type)) {
+                Integer affectCount = jinjuDao.deleteVote(jijuId, userId, VoteConstant.DOWN);
+
+                if(affectCount == 0) {
+                    throw new CustomException("当前没有点赞，不可取消!");
+                }
+
+                jinjuDao.decreaseDownVote(jijuId);
+            }
+
+            result.setMessage("操作成功");
+
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("点踩失败");
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
             LOG.error("点踩失败", e);
-        }
-        return result;
-    }
-
-    /**
-     * 取消踩
-     * @param jijuId
-     * @param userId
-     * @return
-     */
-    @Transactional
-    public Result cancelDownVote(Integer jijuId, Integer userId) {
-        Result result = new Result();
-        try {
-            Integer affectCount = jinjuDao.deleteVote(jijuId, userId);
-
-            if(affectCount == 0) {
-                throw new CustomException("当前没有点踩，不可取消!");
-            }
-
-            jinjuDao.decreaseDownVote(jijuId);
-
-            result.setMessage("取消踩成功");
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("取消踩失败");
-            LOG.error("取消踩失败", e);
-        }
-        return result;
-    }
-
-    /**
-     * 点赞变点踩
-     * @param jijuId
-     * @param userId
-     * @return
-     */
-    @Transactional
-    public Result upVoteToDown(Integer jijuId, Integer userId) {
-        Result result = new Result();
-        try {
-            Integer affectCount = jinjuDao.updateVote(jijuId, userId, VoteConstant.DOWN, VoteConstant.UP, DateUtils.getCurrentTimeForInt());
-
-            if(affectCount == 0) {
-                throw new CustomException("当前没有点赞，不可变点踩!");
-            }
-
-            jinjuDao.decreaseUpVote(jijuId);
-
-            jinjuDao.increaseDownVote(jijuId);
-
-            result.setMessage("点赞变点踩成功");
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("点赞变点踩失败");
-            LOG.error("点赞变点踩失败", e);
-        }
-        return result;
-    }
-
-    /**
-     * 点踩变点赞
-     * @param jijuId
-     * @param userId
-     * @return
-     */
-    @Transactional
-    public Result downVoteToUp(Integer jijuId, Integer userId) {
-        Result result = new Result();
-        try {
-            Integer affectCount = jinjuDao.updateVote(jijuId, userId, VoteConstant.UP, VoteConstant.DOWN, DateUtils.getCurrentTimeForInt());
-
-            if(affectCount == 0) {
-                throw new CustomException("当前没有点踩，不可变点赞!");
-            }
-
-            jinjuDao.increaseUpVote(jijuId);
-
-            jinjuDao.decreaseDownVote(jijuId);
-
-            result.setMessage("点踩变点赞成功");
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            result.setCode(Result.NG);
-            result.setMessage("点踩变点赞失败");
-            LOG.error("点踩变点赞失败", e);
         }
         return result;
     }

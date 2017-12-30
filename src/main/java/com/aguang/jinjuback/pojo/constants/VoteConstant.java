@@ -9,7 +9,7 @@ public class VoteConstant {
     public final static Integer UP = 1;
 
     /* 踩 */
-    public final static Integer DOWN = 1;
+    public final static Integer DOWN = 2;
 
 
 }

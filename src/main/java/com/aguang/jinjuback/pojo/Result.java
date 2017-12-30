@@ -3,7 +3,7 @@ package com.aguang.jinjuback.pojo;
 public class Result {
 
     public final static Integer OK = 0;
-    public final static Integer NG = 1;
+    public final static Integer NG = -1;
 
     private Integer code;
     private Object data;
@@ -41,14 +41,24 @@ public class Result {
         this.message = message;
     }
 
+    public void setSuccess(String message){
+        this.code = OK;
+        this.message = message;
+    }
+
     public void setSuccess(Object data,String message){
-        this.code = 0;
+        this.code = OK;
         this.data = data;
         this.message = message;
     }
 
+    public void setError(String message){
+        this.code = NG;
+        this.message = message;
+    }
+
     public void setError(Object data,String message){
-        this.code = -1;
+        this.code = NG;
         this.data = data;
         this.message = message;
     }

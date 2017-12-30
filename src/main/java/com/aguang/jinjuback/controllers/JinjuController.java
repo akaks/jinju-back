@@ -55,57 +55,21 @@ public class JinjuController extends BaseController {
     }
 
     /**
-     * 点赞
+     * 赞
      * @return
      */
     @PostMapping("/upVote/{jijuId}")
-    public Result upVote(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.upVote(jijuId, getUserId());
+    public Result upVote(@PathVariable("jijuId") Integer jijuId, @RequestParam("type") String type) {
+        return jinjuService.upVote(jijuId, type, getUserId());
     }
 
     /**
-     * 取消点赞
-     * @return
-     */
-    @PostMapping("/cancelUpVote/{jijuId}")
-    public Result cancelUpVote(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.cancelUpVote(jijuId, getUserId());
-    }
-
-    /**
-     * 点踩
+     * 踩
      * @return
      */
     @PostMapping("/downVote/{jijuId}")
-    public Result downVote(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.downVote(jijuId, getUserId());
-    }
-
-    /**
-     * 取消点踩
-     * @return
-     */
-    @PostMapping("/cancelDownVote/{jijuId}")
-    public Result cancelDownVote(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.cancelDownVote(jijuId, getUserId());
-    }
-
-    /**
-     * 点赞变点踩
-     * @return
-     */
-    @PostMapping("/upVoteToDown/{jijuId}")
-    public Result upVoteToDown(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.upVoteToDown(jijuId, getUserId());
-    }
-
-    /**
-     * 点踩变点赞
-     * @return
-     */
-    @PostMapping("/downVoteToUp/{jijuId}")
-    public Result downVoteToUp(@PathVariable("jijuId") Integer jijuId) {
-        return jinjuService.downVoteToUp(jijuId, getUserId());
+    public Result downVote(@PathVariable("jijuId") Integer jijuId, @RequestParam("type") String type) {
+        return jinjuService.downVote(jijuId, type, getUserId());
     }
 
     /**
