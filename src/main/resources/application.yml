@@ -23,7 +23,3 @@ qiniu:
   meiwen-bucket: meiwen
   domainName: http://p2g5cb64g.bkt.clouddn.com/
 
-
-server：
-  session：
-    timeout: 30000
