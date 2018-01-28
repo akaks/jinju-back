@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint(value = "/chatsocket/{userId}")
 @Component
 public class ChatWebSocket {
+
+    public static final String VISITOR_PHOTO = "http://p2g5cb64g.bkt.clouddn.com/FqzcOdtAM96-Fe3ssizwDpMVCbiD";
 //    @Resource
 //    private Webcomment webcomment;
 
@@ -57,7 +59,7 @@ public class ChatWebSocket {
 
         if(user1 == null) {
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
+            chatMessage.setPhotoUrl(VISITOR_PHOTO);
             chatMessage.setMessage("游客"+userId+" 进入了聊天室...");
         } else {
             chatMessage.setUsername(user1.getUsername());
@@ -101,7 +103,7 @@ public class ChatWebSocket {
 
             if(user2 == null) {
                 chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
+                chatUser.setPhotoUrl(VISITOR_PHOTO);
             } else {
                 chatUser.setUsername(user2.getUsername());
                 chatUser.setPhotoUrl(user2.getPhotoUrl());
@@ -116,6 +118,8 @@ public class ChatWebSocket {
 
         for (String user : webSocketMap.keySet()) {
             try {
+                System.out.println(user);
+                System.out.println("关闭发送： " + chatMessageJson);
                 sendMessage(chatMessageJson, webSocketMap.get(user));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -147,10 +151,11 @@ public class ChatWebSocket {
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setUserId(userId);
+        chatMessage.setType("2");
 
         if(user1 == null) {
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
+            chatMessage.setPhotoUrl(VISITOR_PHOTO);
             chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
         } else {
             chatMessage.setUsername(user1.getUsername());
@@ -197,7 +202,7 @@ public class ChatWebSocket {
 
             if(user2 == null) {
                 chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
+                chatUser.setPhotoUrl(VISITOR_PHOTO);
             } else {
                 chatUser.setUsername(user2.getUsername());
                 chatUser.setPhotoUrl(user2.getPhotoUrl());
@@ -241,23 +246,18 @@ public class ChatWebSocket {
 
         String userId = map.get("userId");
 
-        UserService userService = (UserService)SpringUtils.getBean("userService");
-
-        User user1 = userService.getUserById(new Integer(userId));
+        User currentUser = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setUserId(userId);
 
-        if(user1 == null) {
+        if(currentUser == null) {
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
+            chatMessage.setPhotoUrl(VISITOR_PHOTO);
         } else {
-            chatMessage.setUsername(user1.getUsername());
-            chatMessage.setPhotoUrl(user1.getPhotoUrl());
+            chatMessage.setUsername(currentUser.getUsername());
+            chatMessage.setPhotoUrl(currentUser.getPhotoUrl());
         }
-
-        chatMessage.setUsername("akaks");
-        chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
 
         chatMessage.setMessage(message);
         chatMessage.setType("1");
@@ -286,11 +286,16 @@ public class ChatWebSocket {
         error.printStackTrace();
     }
 
+    /**
+     * 发送消息
+     * @param message
+     * @param session
+     * @throws IOException
+     */
     public void sendMessage(String message, Session session) throws IOException {
         if (session.isOpen()) {
             session.getAsyncRemote().sendText(message);
         }
-        //this.session.getAsyncRemote().sendText(message);
     }
 
 
@@ -304,5 +309,17 @@ public class ChatWebSocket {
 
     public static synchronized void subOnlineCount() {
         ChatWebSocket.ONLINE_COUNT--;
+    }
+
+    private User getUserById(String userId) {
+        UserService userService = (UserService)SpringUtils.getBean("userService");
+
+        try {
+            return userService.getUserById(new Integer(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
