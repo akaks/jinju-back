@@ -64,7 +64,7 @@ public class ChatController {
         }
 
         Integer start = (pageIndex - 1) * pageSize;
-        Integer end = pageIndex * pageSize;
+        Integer end = pageIndex * pageSize - 1;
 
         Jedis jedis = null;
         List<String> chatMessages = null;
