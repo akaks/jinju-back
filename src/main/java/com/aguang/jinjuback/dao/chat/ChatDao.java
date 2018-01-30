@@ -3,22 +3,18 @@ package com.aguang.jinjuback.dao.chat;
 import com.aguang.jinjuback.pojo.chat.ChatMessage;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
 public interface ChatDao {
 
-	@Insert("INSERT INTO `jj_vote`(jinju_id, user_id, type, create_time) VALUES (#{jijuId}, #{userId}, #{type}, #{currentTime})")
+	@Insert("INSERT INTO `chat_message`(user_id, username, photo_url, type, message, is_visitor, is_show_time, create_time) " +
+			"VALUES (#{userId}, #{username}, #{photoUrl}, #{type}, #{message}, #{isVisitor}, #{isShowTime}, #{createTime})")
 	Integer createChatMessage(ChatMessage chatMessage);
 
-
-//private String id;
-//private String userId;
-//private String username;
-//private String photoUrl;
-//private String message;
-//private Long createTime;
-///* 消息类型:  1：聊天消息  2：进入、退出提示消息 */
-//private String type;
+	@Select("select * from `chat_message` where id<#{id} order by id desc limit id=#{m},id=#{n}")
+	Integer findChatMessage(@Param("m") int m, @Param("n") int n, @Param("id") int id);
 }

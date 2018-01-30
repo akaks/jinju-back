@@ -4,7 +4,7 @@ import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.chat.ChatMessage;
 import com.aguang.jinjuback.pojo.chat.ChatUser;
 import com.aguang.jinjuback.services.UserService;
-import com.aguang.jinjuback.utils.ConvertUtils;
+import com.aguang.jinjuback.services.chat.ChatService;
 import com.aguang.jinjuback.utils.DateUtils;
 import com.aguang.jinjuback.utils.SpringUtils;
 import com.alibaba.fastjson.JSON;
@@ -52,10 +52,11 @@ public class ChatWebSocket {
         User user1 = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setId(ConvertUtils.getUUID());
+//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
-        chatMessage.setType("2");
+        chatMessage.setType(2);
+        chatMessage.setIsShowTime(false);
         chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
         if(user1 == null) {
@@ -93,7 +94,13 @@ public class ChatWebSocket {
 
         chatMessage.setUserList(userList);
 
+        Integer id = saveToDB(chatMessage);
+        chatMessage.setId(id);
+
         String chatMessageJson = JSON.toJSONString(chatMessage);
+
+        // 将发送的消息存值redis
+//        saveToRedis(chatMessageJson);
 
         for (String user : webSocketMap.keySet()) {
             try {
@@ -126,10 +133,12 @@ public class ChatWebSocket {
         User currentUser = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setId(ConvertUtils.getUUID());
+//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
-        chatMessage.setType("1");
+        chatMessage.setType(1);
+        chatMessage.setIsShowTime(false);
+
         chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
         if(currentUser == null) {
@@ -143,13 +152,18 @@ public class ChatWebSocket {
         }
 
         chatMessage.setMessage(message);
-        chatMessage.setType("1");
+
+
+        // 将发送的消息存值redis
+//        saveToRedis(chatMessageJson);
+
+        Integer id = saveToDB(chatMessage);
+        chatMessage.setId(id);
 
         // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
-        // 将发送的消息存值redis
-        saveToRedis(chatMessageJson);
+
 
         // 群发信息
         for (String user : webSocketMap.keySet()) {
@@ -179,10 +193,11 @@ public class ChatWebSocket {
         User user1 = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setId(ConvertUtils.getUUID());
+//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
-        chatMessage.setType("2");
+        chatMessage.setType(2);
+        chatMessage.setIsShowTime(false);
         chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
         if(user1 == null) {
@@ -220,8 +235,13 @@ public class ChatWebSocket {
 
         chatMessage.setUserList(userList);
 
+        Integer id = saveToDB(chatMessage);
+        chatMessage.setId(id);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
+
+        // 将发送的消息存值redis
+//        saveToRedis(chatMessageJson);
 
         // 群发消息
         for (String user : webSocketMap.keySet()) {
@@ -316,6 +336,12 @@ public class ChatWebSocket {
                 jedis.close();
             }
         }
+    }
+
+    private Integer saveToDB(ChatMessage chatMessage) {
+        ChatService chatService = (ChatService)SpringUtils.getBean("chatService");
+
+        return chatService.createChatMessage(chatMessage);
     }
 
 }
