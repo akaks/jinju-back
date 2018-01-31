@@ -141,6 +141,13 @@ public class ChatWebSocket {
 
         chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
+        // 判断是否需要显示时间
+        if(isNeedShowTime()) {
+            chatMessage.setIsShowTime(true);
+        } else {
+            chatMessage.setIsShowTime(false);
+        }
+
         if(currentUser == null) {
             chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
@@ -162,8 +169,6 @@ public class ChatWebSocket {
 
         // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
-
-
 
         // 群发信息
         for (String user : webSocketMap.keySet()) {
@@ -308,6 +313,11 @@ public class ChatWebSocket {
         ChatWebSocket.ONLINE_COUNT--;
     }
 
+    /**
+     * 获取用户对象
+     * @param userId
+     * @return
+     */
     private User getUserById(String userId) {
         UserService userService = (UserService)SpringUtils.getBean("userService");
 
@@ -319,6 +329,10 @@ public class ChatWebSocket {
         return null;
     }
 
+    /**
+     * 保存消息至redis
+     * @param message
+     */
     private void saveToRedis(String message) {
         JedisPool jedisPool = (JedisPool)SpringUtils.getBean("jedisPool");
 
@@ -338,10 +352,30 @@ public class ChatWebSocket {
         }
     }
 
+    /**
+     * 保存消息至数据库
+     * @param chatMessage
+     * @return
+     */
     private Integer saveToDB(ChatMessage chatMessage) {
         ChatService chatService = (ChatService)SpringUtils.getBean("chatService");
 
         return chatService.createChatMessage(chatMessage);
+    }
+
+    /**
+     * 判断是否需要显示时间
+     * @return
+     */
+    private boolean isNeedShowTime() {
+        ChatService chatService = (ChatService)SpringUtils.getBean("chatService");
+
+        try {
+            return chatService.isNeedShowTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

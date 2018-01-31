@@ -1,6 +1,7 @@
 package com.aguang.jinjuback.controllers.chat;
 
 import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.pojo.chat.ChatMessage;
 import com.aguang.jinjuback.services.chat.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,18 +41,18 @@ public class ChatController {
      * @return
      */
     @GetMapping("/getHistoryMessage")
-    public Result getHistoryMessage(@RequestParam(value = "pageIndex", defaultValue = "1") Integer pageIndex,
-                                    @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
+    public Result getHistoryMessage(@RequestParam(value = "id", required = false) Integer id,
+                                    @RequestParam(value = "limit", defaultValue = "20") Integer limit) {
 
         Result result = new Result();
 
-        if(pageIndex <1) {
-            result.setError("pageIndex必须大于0");
+        if(limit <1) {
+            result.setError("limit必须大于0");
             return result;
         }
 
         try {
-            List<String>  chatMessages = chatService.getHistoryMessage(pageIndex, pageSize);
+            List<ChatMessage>  chatMessages = chatService.getHistoryMessage(id, limit);
             result.setSuccess(chatMessages, "获取成功");
         } catch (Exception ex) {
             result.setError("获取失败");

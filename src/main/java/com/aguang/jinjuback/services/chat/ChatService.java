@@ -39,18 +39,77 @@ public class ChatService {
 		return visitorId;
 	}
 
-	public List<String> getHistoryMessage(Integer pageIndex, Integer pageSize) {
+	/**
+	 * 获取历史消息
+	 * @param id
+	 * @param limit
+	 * @return
+	 */
+	public List<ChatMessage> getHistoryMessage(Integer id, Integer limit) {
 
-		Integer start = (pageIndex - 1) * pageSize;
-		Integer end = pageIndex * pageSize - 1;
+
+		List<ChatMessage> chatMessages = chatDao.findChatMessage(id, limit);
+
+//		try {
+//
+//			chatMessages = jedis.lrange("chat", start, end);
+//		} catch (Exception ex) {
+//			logger.error("错误", ex);
+//			throw new CustomException("Redis连接错误");
+//		} finally {
+//			if (jedis != null) {
+//				//关闭连接
+//				jedis.close();
+//			}
+//		}
+
+		return chatMessages;
+	}
+
+	/**
+	 * 创建消息
+	 * @param chatMessage
+	 * @return
+	 */
+	public Integer createChatMessage(ChatMessage chatMessage) {
+		return chatDao.createChatMessage(chatMessage);
+	}
+	
+	public boolean isNeedShowTime() {
+
+	    boolean flag = false;
 
 		Jedis jedis = null;
-		List<String> chatMessages = null;
 
 		try {
 			jedis = jedisPool.getResource();
-			chatMessages = jedis.lrange("chat", start, end);
-		} catch (Exception ex) {
+
+			// 两分钟的规则
+            if (jedis.get("TWO_MIN") == null) {
+                jedis.set("TWO_MIN", "1");
+            }
+
+            if (jedis.ttl("TWO_MIN") < 0) {
+                flag = true;
+            }
+
+            jedis.expire("TWO_MIN", 120);
+
+            // 十分钟的规则
+            if (jedis.get("TEN_MIN") == null) {
+                jedis.set("TEN_MIN", "1");
+            }
+
+            if (flag) {
+                jedis.expire("TEN_MIN", 600);
+            }
+
+            if (jedis.ttl("TEN_MIN") < 0) {
+                flag = true;
+                jedis.expire("TEN_MIN", 600);
+            }
+
+        } catch (Exception ex) {
 			logger.error("错误", ex);
 			throw new CustomException("Redis连接错误");
 		} finally {
@@ -59,11 +118,7 @@ public class ChatService {
 				jedis.close();
 			}
 		}
-
-		return chatMessages;
+		return flag;
 	}
 
-	public Integer createChatMessage(ChatMessage chatMessage) {
-		return chatDao.createChatMessage(chatMessage);
-	}
 }

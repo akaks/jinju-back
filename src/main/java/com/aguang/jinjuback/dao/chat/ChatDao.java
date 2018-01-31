@@ -4,8 +4,9 @@ import com.aguang.jinjuback.pojo.chat.ChatMessage;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Mapper
 @Repository
@@ -15,6 +16,5 @@ public interface ChatDao {
 			"VALUES (#{userId}, #{username}, #{photoUrl}, #{type}, #{message}, #{isVisitor}, #{isShowTime}, #{createTime})")
 	Integer createChatMessage(ChatMessage chatMessage);
 
-	@Select("select * from `chat_message` where id<#{id} order by id desc limit id=#{m},id=#{n}")
-	Integer findChatMessage(@Param("m") int m, @Param("n") int n, @Param("id") int id);
+	List<ChatMessage> findChatMessage(@Param("id") Integer id, @Param("limit") Integer limit);
 }
