@@ -12,6 +12,8 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -20,6 +22,8 @@ import java.util.List;
 
 @MapperScan("com.aguang.jinjuback.dao")
 @SpringBootApplication
+@EnableScheduling
+@EnableTransactionManagement
 public class JinjuBackApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) {

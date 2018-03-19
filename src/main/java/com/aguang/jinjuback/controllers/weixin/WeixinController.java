@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers.weixin;
 
+import com.aguang.jinjuback.controllers.weixin.pojo.WxResult;
 import com.aguang.jinjuback.pojo.Result;
 import com.thoughtworks.xstream.XStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.*;
 
 @RestController
@@ -22,14 +24,13 @@ public class WeixinController {
     @Autowired
     private HelloService helloService;
 
-    @Autowired
-    private WechatService wechatService;
-
+//    @Autowired
+//    private WechatService wechatService;
 
     @RequestMapping(value = "/wx", method = { RequestMethod.GET, RequestMethod.POST })
     public void wx(HttpServletRequest request, HttpServletResponse response) {
 
-        Token = helloService.hiService();
+        Token = helloService.getToken();
         System.out.println("进入chat");
         boolean isGet = request.getMethod().toLowerCase().equals("get");
         if (isGet) {
@@ -52,41 +53,6 @@ public class WeixinController {
                 e.printStackTrace();
             }
         }
-
-//        TextMessage responseMessage = wechatService.processRequest(request);
-////        out.print(responseMessage);
-////        out.flush();
-//
-//        if(responseMessage!=null) {
-//            return responseMessage;
-//        }
-//
-//        Map<String, String[]> parameterMap = request.getParameterMap();
-//
-//        System.out.println(signature);
-//        System.out.println(timestamp);
-//        System.out.println(nonce);
-//        System.out.println(echostr);
-//
-//        String s = helloService.hiService();
-//
-//        System.out.println("------" + s);
-//
-//        if(CheckUtils.checkSignature(signature, timestamp, nonce)){
-//
-////如果校验成功，将得到的随机字符串原路返回
-//
-//            return echostr;
-//
-//        }
-//
-////        String menu = helloService.createMenu();
-////        System.out.println(menu);
-//
-//        System.out.println("aaa");
-//        Result result = new Result();
-//        result.setSuccess( "金句列表数据成功");
-//        return result;
     }
 
     /**
@@ -146,6 +112,9 @@ public class WeixinController {
         for (int n; (n = in.read(b)) != -1;) {
             xmlMsg.append(new String(b, 0, n, "UTF-8"));
         }
+
+        System.out.println(xmlMsg);
+
         // 将xml内容转换为InputMessage对象
         InputMessage inputMsg = (InputMessage) xs.fromXML(xmlMsg.toString());
 
@@ -175,7 +144,7 @@ public class WeixinController {
             str.append("<Content><![CDATA[你说的是：" + inputMsg.getContent() + "，吗？]]></Content>");
             str.append("</xml>");
             System.out.println(str.toString());
-            response.getWriter().write(str.toString());
+            response.getWriter().write(new String(str.toString().getBytes(), Charset.forName("utf-8")));
         }
         // 获取并返回多图片消息
 //        if (msgType.equals(MsgType.Image.toString())) {
@@ -197,16 +166,67 @@ public class WeixinController {
             response.getWriter().write(xs.toXML(outputMsg));
 
         }
+
+        if (msgType.equals("event")) {
+            // 文本消息
+            System.out.println("开发者微信号：" + inputMsg.getToUserName());
+            System.out.println("发送方帐号：" + inputMsg.getFromUserName());
+            System.out.println("消息创建时间：" + inputMsg.getCreateTime() + new Date(createTime * 1000l));
+            System.out.println("消息内容：" + inputMsg.getContent());
+            System.out.println("消息Id：" + inputMsg.getMsgId());
+
+            StringBuffer str = new StringBuffer();
+            str.append("<xml>");
+            str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>");
+            str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>");
+            str.append("<CreateTime>" + returnTime + "</CreateTime>");
+            str.append("<MsgType><![CDATA[text]]></MsgType>");
+            str.append("<Content><![CDATA[你说的是：" + inputMsg.getContent() + "，吗？]]></Content>");
+            str.append("</xml>");
+            System.out.println(str.toString());
+
+            response.setContentType("text/xml,charset=utf-8");
+
+            response.getWriter().write(str.toString());
+        }
     }
 
-    @GetMapping("/aaa")
-    public Object aaa(String signature, String timestamp, String nonce, String echostr) {
-
-        String menu = helloService.createMenu();
-        System.out.println(menu);
+    @GetMapping("/createMenu")
+    public Object createMenu(String signature, String timestamp, String nonce, String echostr) {
 
         Result result = new Result();
-        result.setSuccess( "金句列表数据成功");
+
+        try {
+            WxResult wxResult = helloService.createMenu();
+
+            if(WxResult.OK.equals(wxResult.getErrcode())) {
+                result.setSuccess( "创建菜单成功");
+            } else {
+                result.setError( "创建菜单失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError( "创建菜单失败");
+        }
+
+        return result;
+    }
+
+    @GetMapping("/getMenu")
+    public Object getMenu() {
+
+        Result result = new Result();
+
+        try {
+            String menu = helloService.getMenu();
+
+            result.setSuccess(menu, "获取成功");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError("获取失败");
+        }
+
         return result;
     }
 }
