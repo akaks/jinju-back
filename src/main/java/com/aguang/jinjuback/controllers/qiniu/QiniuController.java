@@ -30,6 +30,9 @@ public class QiniuController extends BaseController {
     @Value("${qiniu.meiwen-bucket}")
     private String meiwenBucket;
 
+    @Value("${qiniu.find-bucket}")
+    private String findBucket;
+
     /**
      * 获取七牛云的上传token
      * @return
@@ -46,6 +49,10 @@ public class QiniuController extends BaseController {
             uploadToken = auth.uploadToken(jinjuBucket, null);
         } else if("2".equals(type)) {
             uploadToken = auth.uploadToken(meiwenBucket, null);
+        } else if("3".equals(type)) {
+            uploadToken = auth.uploadToken(findBucket, null);
+        } else {
+            result.setError("无效的类型");
         }
 
         result.setSuccess(uploadToken, "query success");

@@ -28,6 +28,7 @@ qiniu:
   secretKey: NM0gE2uPl0syJnJ7-JPuSVyXryq03YNY_ujvHQd4
   jinju-bucket: jinju
   meiwen-bucket: meiwen
+  find-bucket: find
   jinjuDomainName: http://p2g5cb64g.bkt.clouddn.com/
   meiwenDomainName: http://p2wuhp1bg.bkt.clouddn.com/
 
