@@ -1,16 +1,16 @@
 package com.aguang.jinjuback.services;
 
-import com.aguang.jinjuback.configuration.CustomException;
+import com.aguang.jinjuback.config.exception.CustomException;
 import com.aguang.jinjuback.dao.JinjuDao;
-import com.aguang.jinjuback.model.JinjuComment;
-import com.aguang.jinjuback.model.Jinju;
-import com.aguang.jinjuback.pojo.JinjuCommentInfo;
-import com.aguang.jinjuback.pojo.JinjuInfo;
-import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.common.PageInfo;
-import com.aguang.jinjuback.pojo.constants.ConfirmOrCalcelConstant;
-import com.aguang.jinjuback.pojo.constants.IsDeleteConstant;
-import com.aguang.jinjuback.pojo.constants.VoteConstant;
+import com.aguang.jinjuback.model.po.JinjuComment;
+import com.aguang.jinjuback.model.po.Jinju;
+import com.aguang.jinjuback.model.pojo.JinjuCommentInfo;
+import com.aguang.jinjuback.model.pojo.JinjuInfo;
+import com.aguang.jinjuback.model.pojo.Result;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.constants.ConfirmOrCalcelConstant;
+import com.aguang.jinjuback.model.constants.IsDeleteConstant;
+import com.aguang.jinjuback.model.constants.VoteConstant;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

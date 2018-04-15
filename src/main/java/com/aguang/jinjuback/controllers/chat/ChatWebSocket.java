@@ -1,8 +1,9 @@
 package com.aguang.jinjuback.controllers.chat;
 
-import com.aguang.jinjuback.model.User;
-import com.aguang.jinjuback.pojo.chat.ChatMessage;
-import com.aguang.jinjuback.pojo.chat.ChatUser;
+import com.aguang.jinjuback.model.constants.ChatMessageTypeConstant;
+import com.aguang.jinjuback.model.po.User;
+import com.aguang.jinjuback.model.pojo.chat.ChatMessage;
+import com.aguang.jinjuback.model.pojo.chat.ChatUser;
 import com.aguang.jinjuback.services.UserService;
 import com.aguang.jinjuback.services.chat.ChatService;
 import com.aguang.jinjuback.utils.DateUtils;
@@ -43,11 +44,13 @@ public class ChatWebSocket {
 //    @Autowired
 //    private UserService userService;
 
-    //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
+    // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     public static int ONLINE_COUNT = 0;
 
     // 存放userId和Session
-    public static ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<String, Session>();//建立连接的方法
+    public static ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<>();
+    // 存放userId和用户信息
+    public static ConcurrentHashMap<String, ChatUser> chatUserMap = new ConcurrentHashMap<>();
 
     /**
      * 连接打开的方法
@@ -56,55 +59,37 @@ public class ChatWebSocket {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") String userId) {
-        System.out.println("onOpen");
 
         webSocketMap.put(userId, session);
         addOnlineCount(); //在线数加
 
-        User user1 = getUserById(userId);
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setUserId(userId);
-        // 设置消息类型为： 提示消息
-        chatMessage.setType(2);
-        chatMessage.setIsShowTime(false);
-        chatMessage.setCreateTime(DateUtils.getCurrentTime());
-
+        User user = getUserById(userId);
+        /* 缓存当前用户信息 */
+        ChatUser chatUser = new ChatUser();
+        chatUser.setUserId(userId);
         // 判断是登录用户还是游客
-        if(user1 == null) {
-            chatMessage.setIsVisitor(true);
-            chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
-            chatMessage.setMessage("游客"+userId+" 进入了聊天室...");
+        if(user == null) {
+            chatUser.setIsVisitor(true);
+            chatUser.setUsername("游客" + userId);
+            chatUser.setPhotoUrl(getVisitorPhoto(userId));
         } else {
-            chatMessage.setIsVisitor(false);
-            chatMessage.setUsername(user1.getUsername());
-            chatMessage.setPhotoUrl(user1.getPhotoUrl());
-            chatMessage.setMessage(user1.getUsername() +" 进入了聊天室...");
+            chatUser.setIsVisitor(false);
+            chatUser.setUsername(user.getUsername());
+            chatUser.setPhotoUrl(user.getPhotoUrl());
         }
+        chatUserMap.put(userId, chatUser);
 
-        chatMessage.setUserList(getChatUserList());
+        String message = "游客%s 进入了聊天室...";
+        ChatMessage chatMessage = createChatMessage(userId, ChatMessageTypeConstant.TIP, message);
 
         // 将消息保存到数据库
-        saveToDB(chatMessage);
+        saveMessageToDB(chatMessage);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
+        sendMassMessage(chatMessageJson);
 
-        // 将发送的消息存值redis
-//        saveToRedis(chatMessageJson);
-
-        for (String user : webSocketMap.keySet()) {
-            try {
-                System.out.println(user);
-                System.out.println("关闭发送： " + chatMessageJson);
-                sendMessage(chatMessageJson, webSocketMap.get(user));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println(userId + "进入聊天室");
-        System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+        System.out.println(userId + "进入聊天室!");
+        System.out.println("###有新连接加入! 当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -121,53 +106,16 @@ public class ChatWebSocket {
 
         String userId = map.get("userId");
 
-        User currentUser = getUserById(userId);
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setUserId(userId);
-        // 设置消息类型为： 提示消息
-        chatMessage.setType(1);
-        chatMessage.setIsShowTime(false);
-
-        chatMessage.setCreateTime(DateUtils.getCurrentTime());
-
-        // 判断是否需要显示时间
-        if(isNeedShowTime()) {
-            chatMessage.setIsShowTime(true);
-        } else {
-            chatMessage.setIsShowTime(false);
-        }
-
-        if(currentUser == null) {
-            chatMessage.setIsVisitor(true);
-            chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
-        } else {
-            chatMessage.setIsVisitor(false);
-            chatMessage.setUsername(currentUser.getUsername());
-            chatMessage.setPhotoUrl(currentUser.getPhotoUrl());
-        }
-
-        chatMessage.setMessage(message);
-
-
-        // 将发送的消息存值redis
-//        saveToRedis(chatMessageJson);
+        ChatMessage chatMessage = createChatMessage(userId, ChatMessageTypeConstant.DIALOGUE, message);
 
         // 将消息保存到数据库
-        saveToDB(chatMessage);
+        saveMessageToDB(chatMessage);
 
         // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
         // 群发信息
-        for (String user : webSocketMap.keySet()) {
-            try {
-                sendMessage(chatMessageJson, webSocketMap.get(user));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        sendMassMessage(chatMessageJson);
     }
 
     /**
@@ -178,54 +126,24 @@ public class ChatWebSocket {
     public void onClose(Session session) {
         Map<String, String> map = session.getPathParameters();
         webSocketMap.remove(map.get("userId")); //从set中删除
-        for (String user : webSocketMap.keySet()) {
-            System.out.println(user);
-        }
-        subOnlineCount(); //在线数减
+        chatUserMap.remove(map.get("userId")); //从set中删除
+
+        subOnlineCount(); //在线数减 1
 
         String userId = map.get("userId");
 
-        User user1 = getUserById(userId);
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setUserId(userId);
-        // 设置消息类型为： 提示消息
-        chatMessage.setType(2);
-        chatMessage.setIsShowTime(false);
-        chatMessage.setCreateTime(DateUtils.getCurrentTime());
-
-        if(user1 == null) {
-            chatMessage.setIsVisitor(true);
-            chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
-            chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
-        } else {
-            chatMessage.setIsVisitor(false);
-            chatMessage.setUsername(user1.getUsername());
-            chatMessage.setPhotoUrl(user1.getPhotoUrl());
-            chatMessage.setMessage(user1.getUsername() +" 离开了聊天室...");
-        }
-
-        chatMessage.setUserList(getChatUserList());
+        String message = "游客%s 离开了聊天室...";
+        ChatMessage chatMessage = createChatMessage(userId, ChatMessageTypeConstant.TIP, message);
 
         // 将消息保存到数据库
-        saveToDB(chatMessage);
+        saveMessageToDB(chatMessage);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
-
-        // 将发送的消息存值redis
-//        saveToRedis(chatMessageJson);
-
         // 群发消息
-        for (String user : webSocketMap.keySet()) {
-            try {
-                sendMessage(chatMessageJson, webSocketMap.get(user));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        sendMassMessage(chatMessageJson);
 
         System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+
     }
 
     /**
@@ -237,6 +155,62 @@ public class ChatWebSocket {
     public void onError(Session session, Throwable error) {
         System.out.println("发生错误");
         error.printStackTrace();
+    }
+
+    /**
+     * 创建消息
+     * @param userId 用户id
+     * @param type 消息类型
+     * @param message 消息
+     * @return
+     */
+    private ChatMessage createChatMessage(String userId, Integer type, String message) {
+
+        User user = null;
+        if(new Integer(userId) < 10000) {
+            user = getUserById(userId);
+        }
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setUserId(userId);
+        // 设置消息类型为： 提示消息
+        chatMessage.setType(type);
+        chatMessage.setCreateTime(DateUtils.getCurrentTime());
+
+        // 判断是否需要显示时间
+        if(ChatMessageTypeConstant.DIALOGUE.equals(type) && isNeedShowTime()) {
+            chatMessage.setIsShowTime(true);
+        } else {
+            chatMessage.setIsShowTime(false);
+        }
+
+        // 判断是登录用户还是游客
+        if(user == null) {
+            chatMessage.setIsVisitor(true);
+            chatMessage.setUsername("游客" + userId);
+            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
+            if(ChatMessageTypeConstant.DIALOGUE.equals(type)) {
+                chatMessage.setMessage(message);
+            } else {
+                chatMessage.setMessage(String.format(message, userId));
+            }
+        } else {
+            chatMessage.setIsVisitor(false);
+            chatMessage.setUsername(user.getUsername());
+            chatMessage.setPhotoUrl(user.getPhotoUrl());
+            if(ChatMessageTypeConstant.DIALOGUE.equals(type)) {
+                chatMessage.setMessage(message);
+            } else {
+                chatMessage.setMessage(String.format(message, user.getUsername()));
+            }
+        }
+
+        // 有用户进入或者由用户退出时，刷新User列表
+        if(ChatMessageTypeConstant.TIP.equals(type)) {
+            chatMessage.setUserList(getChatUserList());
+        }
+
+        return chatMessage;
     }
 
     /**
@@ -254,14 +228,11 @@ public class ChatWebSocket {
     /**
      * 群发信息
      * @param message
-     * @param session
      * @throws IOException
      */
-    public void sendMassMessage(String message, Session session) throws IOException {
+    public void sendMassMessage(String message) {
         for (String user : webSocketMap.keySet()) {
             try {
-                System.out.println(user);
-                System.out.println("关闭发送： " + message);
                 sendMessage(message, webSocketMap.get(user));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -287,7 +258,7 @@ public class ChatWebSocket {
      * @return
      */
     private User getUserById(String userId) {
-        UserService userService = SpringUtils.getBean("userService");
+        UserService userService = SpringUtils.getBean(UserService.class);
 
         try {
             return userService.getUserById(new Integer(userId));
@@ -304,22 +275,8 @@ public class ChatWebSocket {
     private List<ChatUser> getChatUserList() {
         List<ChatUser> userList = new ArrayList<>();
 
-        for (String userId2 : webSocketMap.keySet()) {
-            User currentUser = getUserById(userId2);
-
-            ChatUser chatUser = new ChatUser();
-            chatUser.setUserId(userId2);
-
-            // 用户为空时，为判断为游客
-            if(currentUser == null) {
-                chatUser.setIsVisitor(true);
-                chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl(getVisitorPhoto(userId2));
-            } else {
-                chatUser.setIsVisitor(false);
-                chatUser.setUsername(currentUser.getUsername());
-                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
-            }
+        for (String userId : webSocketMap.keySet()) {
+            ChatUser chatUser = chatUserMap.get(userId);
             userList.add(chatUser);
         }
 
@@ -330,6 +287,7 @@ public class ChatWebSocket {
      * 保存消息至redis
      * @param message
      */
+    @Deprecated
     private void saveToRedis(String message) {
         JedisPool jedisPool = SpringUtils.getBean("jedisPool");
 
@@ -354,9 +312,8 @@ public class ChatWebSocket {
      * @param chatMessage
      * @return
      */
-    private Integer saveToDB(ChatMessage chatMessage) {
-        ChatService chatService = SpringUtils.getBean("chatService");
-
+    private Integer saveMessageToDB(ChatMessage chatMessage) {
+        ChatService chatService = SpringUtils.getBean(ChatService.class);
         return chatService.createChatMessage(chatMessage);
     }
 
@@ -365,7 +322,7 @@ public class ChatWebSocket {
      * @return
      */
     private boolean isNeedShowTime() {
-        ChatService chatService = SpringUtils.getBean("chatService");
+        ChatService chatService = SpringUtils.getBean(ChatService.class);
 
         try {
             return chatService.isNeedShowTime();

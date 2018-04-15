@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.controllers.shop;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.model.Product;
-import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.po.Product;
+import com.aguang.jinjuback.model.pojo.Result;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
 import com.aguang.jinjuback.services.shop.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;

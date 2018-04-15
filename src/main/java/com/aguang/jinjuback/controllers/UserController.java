@@ -1,8 +1,8 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.model.User;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.po.User;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.aguang.jinjuback.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,14 +44,14 @@ public class UserController extends BaseController {
      * @param request
      * @return
      */
-    @PostMapping("/login")
-    public Result login(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
-        Result result = userService.login(username, password);
-        if(Result.OK.equals(result.getCode())) {
-            request.getSession().setAttribute("userId", ((User)result.getData()).getUserId());
-        }
-        return result;
-    }
+//    @PostMapping("/login")
+//    public Result login(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
+//        Result result = userService.login(username, password);
+//        if(Result.OK.equals(result.getCode())) {
+//            request.getSession().setAttribute("userId", ((User)result.getData()).getUserId());
+//        }
+//        return result;
+//    }
 
     /**
      * 用户退出
@@ -62,7 +62,7 @@ public class UserController extends BaseController {
     public Result logout(@PathVariable("id") Integer id, HttpServletRequest request) {
         Result result = new Result();
 
-        request.getSession().removeAttribute("userId");
+        request.getSession().removeAttribute("authentication");
 
         result.setSuccess("退出成功!");
 

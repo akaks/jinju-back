@@ -4,39 +4,70 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
-	<authentication-manager>
-		<authentication-provider>
-			<password-encoder hash="md5"/>
-			<jdbc-user-service data-source-ref="dataSource" users-by-username-query="select username,password,enabled from jj_user WHERE username=?"
-				authorities-by-username-query="select username, 'NORMALLY' as authority from jj_user where username=?"/>
+	<!-- 认证管理 -->
+	<authentication-manager alias="myAuthenticationManager">
+		<authentication-provider user-service-ref="userDetailsService">
+			<password-encoder ref="passwordEncoder" />
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="jwtUtils" class="com.aguang.jinjuback.jwt.JWTUtils"/>
-	<beans:bean id="jwtAuthenticationFilter" class="com.aguang.jinjuback.jwt.JWTAuthenticationFilter"/>
-	<beans:bean id="restAuthenticationEntryPoint" class="com.aguang.jinjuback.jwt.RestAuthenticationEntryPoint"/>
+	<beans:bean id="loginFilter" class="com.aguang.jinjuback.config.security.MyUsernamePasswordAuthenticationFilter">
+		<!-- 登录提交处理 -->
+		<beans:property name="filterProcessesUrl" value="/user/login"></beans:property>
+		<!-- 登录成功跳转 -->
+		<beans:property name="authenticationSuccessHandler" ref="myAuthenticationSuccessHandler"></beans:property>
+		<!-- 设置登录失败的网址 -->
+		<beans:property name="authenticationFailureHandler" ref="myAuthenticationFailureHandler"></beans:property>
+		<!-- 用户拥有权限 -->
+		<beans:property name="authenticationManager" ref="myAuthenticationManager"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="myAuthenticationSuccessHandler" class="com.aguang.jinjuback.config.security.MyAuthenticationSuccessHandler"/>
+	<beans:bean id="myAuthenticationFailureHandler" class="com.aguang.jinjuback.config.security.MyAuthenticationFailureHandler"/>
+
+	<beans:bean id="jwtUtils" class="com.aguang.jinjuback.config.jwt.JWTUtils"/>
+	<!--<beans:bean id="jwtAuthenticationFilter" class="com.aguang.jinjuback.config.jwt.JWTAuthenticationFilter"/>-->
+	<beans:bean id="authenticationFilter" class="com.aguang.jinjuback.config.security.AuthenticationFilter"/>
+	<beans:bean id="restAuthenticationEntryPoint" class="com.aguang.jinjuback.config.security.RestAuthenticationEntryPoint"/>
+
+	<beans:bean id="userDetailsService" class="com.aguang.jinjuback.config.security.MyDetailsService"/>
+	<beans:bean id="passwordEncoder" class="com.aguang.jinjuback.config.security.MyPasswordEncoder"/>
 
 	<http entry-point-ref="restAuthenticationEntryPoint" create-session="stateless">
 		<csrf disabled="true"/>
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>
-		<form-login login-page="/api/uap/v1/login"/>
-		<logout/>
+		<custom-filter before="FORM_LOGIN_FILTER" ref="authenticationFilter"/>
+		<!--<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/>-->
+		<!--<form-login login-page="/api/uap/v1/login"/>
+		<logout/>-->
 		<!-- 注意这个配置，它的匹配规则会去先匹配方法，如接口有个方法地址为"/test",即使你定义的是"/test.html"也会去匹配"/test"而忽略后缀 -->
 
-		<intercept-url pattern="/death.html" access="hasAnyAuthority('NORMALLY')" />
+		<!-- 金句 -->
+		<intercept-url pattern="/jinju/create" method="POST" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/upVote/**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/downVote/**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/collect/**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/comment/create" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/comment/upVote/**" access="hasAnyAuthority('USER')"/>
 
-		<intercept-url pattern="/chat/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/adminApp/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/administrator/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/application/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/authority/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/role/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/user/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/administratorIO/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/userIO/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/roleAuthority/**" access="hasAnyAuthority('NORMALLY')" />
-		<intercept-url pattern="/api/uap/v1/roleUser/**" access="hasAnyAuthority('NORMALLY')" />
+		<!-- 美文 -->
+		<intercept-url pattern="/meiwen/create" method="POST" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/jinju/comment/create" access="hasAnyAuthority('USER')"/>
 
+		<!-- 爬虫 -->
+		<intercept-url pattern="/spider/**" access="hasAnyAuthority('USER')"/>
 
+		<!-- 用户 -->
+		<intercept-url pattern="/user/logout**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/user/update/**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/user/updatePhotoUrl/**" access="hasAnyAuthority('USER')"/>
+		<intercept-url pattern="/user/{id}**" access="hasAnyAuthority('USER')"/>
+
+		<!-- 后台管理 -->
+		<intercept-url pattern="/admin/**" access="hasAnyAuthority('ADMIN')"/>
+
+		<intercept-url pattern="/**" access="permitAll()" />
+
+		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
 	</http>
+
 </beans:beans>

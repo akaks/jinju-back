@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.dao.admin;
 
-import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
+import com.aguang.jinjuback.model.pojo.admin.AdJinjuInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

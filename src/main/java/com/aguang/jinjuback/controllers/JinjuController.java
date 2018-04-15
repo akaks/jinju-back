@@ -1,10 +1,10 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.model.JinjuComment;
-import com.aguang.jinjuback.model.Jinju;
-import com.aguang.jinjuback.pojo.JinjuInfo;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.po.JinjuComment;
+import com.aguang.jinjuback.model.po.Jinju;
+import com.aguang.jinjuback.model.pojo.JinjuInfo;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.aguang.jinjuback.services.JinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;

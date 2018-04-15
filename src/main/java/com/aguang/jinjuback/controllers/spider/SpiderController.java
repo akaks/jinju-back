@@ -1,7 +1,7 @@
 package com.aguang.jinjuback.controllers.spider;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.aguang.jinjuback.services.spider.SpiderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,17 +21,8 @@ public class SpiderController extends BaseController {
      */
     @GetMapping("/neihan")
     public Result neihan() {
-        Result result = new Result();
-
-        try {
-            spiderService.doNeihan();
-            result.setSuccess("success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setError(e.getMessage());
-        }
-
-        return result;
+        spiderService.doNeihan();
+        return Result.ok();
     }
 
     /**
@@ -40,16 +31,17 @@ public class SpiderController extends BaseController {
      */
     @GetMapping("/budejie")
     public Result budejie() {
-        Result result = new Result();
+        spiderService.doBudejie();
+        return Result.ok();
+    }
 
-        try {
-            spiderService.doBudejie();
-            result.setSuccess("success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setError(e.getMessage());
-        }
-
-        return result;
+    /**
+     * 捧腹网
+     * @return
+     */
+    @GetMapping("/pengfu")
+    public Result pengfu() {
+        spiderService.doPengfu();
+        return Result.ok();
     }
 }

@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.User;
+import com.aguang.jinjuback.model.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

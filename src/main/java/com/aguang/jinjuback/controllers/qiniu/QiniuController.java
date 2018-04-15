@@ -1,8 +1,10 @@
 package com.aguang.jinjuback.controllers.qiniu;
 
+import com.aguang.jinjuback.config.properties.JinjuProperties;
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.qiniu.util.Auth;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/qiniu")
 public class QiniuController extends BaseController {
 
-    @Value("${qiniu.accessKey}")
-    private String accessKey;
-
-    @Value("${qiniu.secretKey}")
-    private String secretKey;
+//    @Value("${qiniu.accessKey}")
+//    private String accessKey;
+//
+//    @Value("${qiniu.secretKey}")
+//    private String secretKey;
 
     @Value("${qiniu.jinju-bucket}")
     private String jinjuBucket;
@@ -33,6 +35,9 @@ public class QiniuController extends BaseController {
     @Value("${qiniu.find-bucket}")
     private String findBucket;
 
+    @Autowired
+    private JinjuProperties properties;
+
     /**
      * 获取七牛云的上传token
      * @return
@@ -40,6 +45,9 @@ public class QiniuController extends BaseController {
     @GetMapping("/uploadToken")
     public Result uploadToken(@RequestParam(value = "type", defaultValue = "1") String type) {
         Result result = new Result();
+
+        String accessKey = properties.getQiniu().getKey().getAccessKey();
+        String secretKey = properties.getQiniu().getKey().getSecretKey();
 
         Auth auth = Auth.create(accessKey, secretKey);
 

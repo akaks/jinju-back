@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.controllers.admin;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
-import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.pojo.Result;
+import com.aguang.jinjuback.model.pojo.admin.AdJinjuInfo;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
 import com.aguang.jinjuback.services.admin.AdJinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

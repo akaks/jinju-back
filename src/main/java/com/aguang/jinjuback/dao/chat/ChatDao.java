@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.dao.chat;
 
-import com.aguang.jinjuback.pojo.chat.ChatMessage;
+import com.aguang.jinjuback.model.pojo.chat.ChatMessage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

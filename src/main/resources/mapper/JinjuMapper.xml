@@ -9,7 +9,7 @@
     </insert>
 
     <!-- 获取金句的列表信息（用户已登录的情况） -->
-    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.model.pojo.JinjuInfo">
         SELECT
             j.jinju_id,
             j.content,
@@ -38,7 +38,7 @@
     </select>
 
     <!-- 获取金句的列表信息（用户未登录的情况） -->
-    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.model.pojo.JinjuInfo">
         SELECT
         j.jinju_id,
         j.content,
@@ -61,7 +61,7 @@
     </select>
 
     <!-- 获取金句的详细信息（用户已登录的情况） -->
-    <select id="getJinjuWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+    <select id="getJinjuWithUserId" resultType="com.aguang.jinjuback.model.pojo.JinjuInfo">
         SELECT
             j.jinju_id,
             j.content,
@@ -88,7 +88,7 @@
     </select>
 
     <!-- 获取金句的详细信息（用户未登录的情况） -->
-    <select id="getJinjuWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+    <select id="getJinjuWithoutUserId" resultType="com.aguang.jinjuback.model.pojo.JinjuInfo">
         SELECT
             j.jinju_id,
             j.content,
@@ -115,7 +115,7 @@
     </insert>
 
     <!-- 获取评论列表 -->
-    <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.JinjuCommentInfo">
+    <select id="listCommentByPage" resultType="com.aguang.jinjuback.model.pojo.JinjuCommentInfo">
         SELECT
             c.id,
             c.jinju_id,

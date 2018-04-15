@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.model.Meiwen;
-import com.aguang.jinjuback.model.MeiwenComment;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.po.Meiwen;
+import com.aguang.jinjuback.model.po.MeiwenComment;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.aguang.jinjuback.services.MeiwenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;

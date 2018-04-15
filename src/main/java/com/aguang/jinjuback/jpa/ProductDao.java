@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.jpa;
 
-import com.aguang.jinjuback.model.Product;
+import com.aguang.jinjuback.model.po.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

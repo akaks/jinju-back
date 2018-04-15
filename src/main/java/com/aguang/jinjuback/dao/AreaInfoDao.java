@@ -1,6 +1,6 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.AreaInfo;
+import com.aguang.jinjuback.model.po.AreaInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

@@ -32,6 +32,14 @@ public class SpringUtils implements ApplicationContextAware {
         }
     }
 
+    public static <T> T getBean(Class clazz) {
+        Object bean = applicationContext.getBean(clazz);
+        if(bean != null) {
+            return (T) bean;
+        }
+        return null;
+    }
+
     public static <T> Map<String, T> getBeansOfType(Class<T> baseType){
         return applicationContext.getBeansOfType(baseType);
     }

@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.Meiwen;
-import com.aguang.jinjuback.model.MeiwenComment;
-import com.aguang.jinjuback.pojo.MeiwenCommentInfo;
-import com.aguang.jinjuback.pojo.MeiwenInfo;
+import com.aguang.jinjuback.model.po.Meiwen;
+import com.aguang.jinjuback.model.po.MeiwenComment;
+import com.aguang.jinjuback.model.pojo.MeiwenCommentInfo;
+import com.aguang.jinjuback.model.pojo.MeiwenInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

@@ -1,7 +1,7 @@
 package com.aguang.jinjuback.controllers.chat;
 
-import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.chat.ChatMessage;
+import com.aguang.jinjuback.model.pojo.Result;
+import com.aguang.jinjuback.model.pojo.chat.ChatMessage;
 import com.aguang.jinjuback.services.chat.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

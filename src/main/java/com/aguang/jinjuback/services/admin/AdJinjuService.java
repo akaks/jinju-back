@@ -1,11 +1,11 @@
 package com.aguang.jinjuback.services.admin;
 
-import com.aguang.jinjuback.configuration.CustomException;
+import com.aguang.jinjuback.config.exception.CustomException;
 import com.aguang.jinjuback.dao.admin.AdJinjuDao;
-import com.aguang.jinjuback.model.Jinju;
-import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
-import com.aguang.jinjuback.pojo.common.PageInfo;
-import com.aguang.jinjuback.pojo.constants.JinjuTypeConstant;
+import com.aguang.jinjuback.model.po.Jinju;
+import com.aguang.jinjuback.model.pojo.admin.AdJinjuInfo;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.constants.JinjuTypeConstant;
 import com.aguang.jinjuback.services.AreaInfoService;
 import com.aguang.jinjuback.services.JinjuService;
 import com.aguang.jinjuback.utils.PropertieUtils;

@@ -6,7 +6,7 @@
         INSERT INTO jinju_db.jj_user(username,password,create_time) VALUES(#{username},#{password},#{curTime});
     </insert>-->
 
-    <select id="getUserInfo" resultType="com.aguang.jinjuback.pojo.UserInfo">
+    <select id="getUserInfo" resultType="com.aguang.jinjuback.model.pojo.UserInfo">
         SELECT
             user_id,
             username,
@@ -24,12 +24,12 @@
         WHERE user_id = #{id};
     </select>
 
-    <!--<select id="getUserByUsername" resultType="com.aguang.jinjuback.pojo.UserInfo">
+    <!--<select id="getUserByUsername" resultType="com.aguang.jinjuback.model.pojo.UserInfo">
         SELECT user_id,username,password FROM jinju_db.jj_user WHERE username = #{username};
     </select>-->
 
     <!-- 更新用户信息 -->
-    <update id="updateUser" parameterType="com.aguang.jinjuback.model.User">
+    <update id="updateUser" parameterType="com.aguang.jinjuback.model.po.User">
         UPDATE
           jinju_db.jj_user
         SET

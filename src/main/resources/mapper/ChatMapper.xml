@@ -3,7 +3,7 @@
 <mapper namespace="com.aguang.jinjuback.dao.chat.ChatDao">
 
     <!-- 添加聊天室消息 -->
-    <insert id="createChatMessage" parameterType="com.aguang.jinjuback.pojo.chat.ChatMessage">
+    <insert id="createChatMessage" parameterType="com.aguang.jinjuback.model.pojo.chat.ChatMessage">
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -14,7 +14,7 @@
     </insert>
 
     <!-- 查询聊天室历史消息 -->
-    <select id="findChatMessage" resultType="com.aguang.jinjuback.pojo.chat.ChatMessage">
+    <select id="findChatMessage" resultType="com.aguang.jinjuback.model.pojo.chat.ChatMessage">
         SELECT
           *
         FROM

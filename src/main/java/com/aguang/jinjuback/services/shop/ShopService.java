@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.services.shop;
 
-import com.aguang.jinjuback.constants.DeleteStatusConstants;
+import com.aguang.jinjuback.model.constants.DeleteStatusConstants;
 import com.aguang.jinjuback.jpa.ShopDao;
-import com.aguang.jinjuback.model.Shop;
-import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.po.Shop;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
 import com.aguang.jinjuback.utils.DateUtils;
 import com.aguang.jinjuback.utils.StringUtils;
 import org.slf4j.Logger;

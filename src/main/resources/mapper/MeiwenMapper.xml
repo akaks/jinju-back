@@ -11,7 +11,7 @@
     </insert>
 
     <!-- 获取美文的列表信息（用户已登录的情况） -->
-    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.MeiwenInfo">
+    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.model.pojo.MeiwenInfo">
         SELECT
             m.id as meiwenId,
             m.type,
@@ -38,7 +38,7 @@
     </select>
 
     <!-- 获取美文的列表信息（用户未登录的情况） -->
-    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.MeiwenInfo">
+    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.model.pojo.MeiwenInfo">
         SELECT
             m.id as meiwenId,
             m.type,
@@ -62,7 +62,7 @@
     </select>
 
     <!-- 获取美文的详情信息 -->
-    <select id="getMeiwen" resultType="com.aguang.jinjuback.pojo.MeiwenInfo">
+    <select id="getMeiwen" resultType="com.aguang.jinjuback.model.pojo.MeiwenInfo">
         SELECT
             m.id as meiwenId,
             m.type,
@@ -100,7 +100,7 @@
     </insert>
 
     <!-- 获取评论列表 -->
-    <select id="listMeiwenCommentByPage" resultType="com.aguang.jinjuback.pojo.MeiwenCommentInfo">
+    <select id="listMeiwenCommentByPage" resultType="com.aguang.jinjuback.model.pojo.MeiwenCommentInfo">
         SELECT
             m.id,
             m.meiwen_id,

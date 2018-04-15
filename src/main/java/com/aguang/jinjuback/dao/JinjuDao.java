@@ -1,9 +1,9 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.Jinju;
-import com.aguang.jinjuback.model.JinjuComment;
-import com.aguang.jinjuback.pojo.JinjuCommentInfo;
-import com.aguang.jinjuback.pojo.JinjuInfo;
+import com.aguang.jinjuback.model.po.Jinju;
+import com.aguang.jinjuback.model.po.JinjuComment;
+import com.aguang.jinjuback.model.pojo.JinjuCommentInfo;
+import com.aguang.jinjuback.model.pojo.JinjuInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

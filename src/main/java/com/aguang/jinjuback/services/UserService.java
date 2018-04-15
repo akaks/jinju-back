@@ -1,13 +1,15 @@
 package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.dao.UserDao;
-import com.aguang.jinjuback.model.User;
-import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.UserInfo;
+import com.aguang.jinjuback.model.po.User;
+import com.aguang.jinjuback.model.pojo.Result;
+import com.aguang.jinjuback.model.pojo.UserInfo;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -124,5 +126,13 @@ public class UserService {
 
     public User getUserById(Integer userId) {
         return userDao.getUserById(userId);
+    }
+
+    public Set<String> selectAuthorityByName(String username) {
+        return userDao.selectAuthorityByName(username);
+    }
+
+    public User loadUserByUsername(String username) {
+        return userDao.loadUserByUsername(username);
     }
 }

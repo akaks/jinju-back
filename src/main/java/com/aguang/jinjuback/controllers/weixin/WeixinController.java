@@ -1,7 +1,7 @@
 package com.aguang.jinjuback.controllers.weixin;
 
 import com.aguang.jinjuback.controllers.weixin.pojo.WxResult;
-import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.model.pojo.Result;
 import com.thoughtworks.xstream.XStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

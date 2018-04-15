@@ -1,11 +1,11 @@
 package com.aguang.jinjuback.services.shop;
 
-import com.aguang.jinjuback.configuration.CustomException;
-import com.aguang.jinjuback.constants.AuditStatusConstants;
-import com.aguang.jinjuback.constants.DeleteStatusConstants;
+import com.aguang.jinjuback.config.exception.CustomException;
+import com.aguang.jinjuback.model.constants.AuditStatusConstants;
+import com.aguang.jinjuback.model.constants.DeleteStatusConstants;
 import com.aguang.jinjuback.jpa.ProductDao;
-import com.aguang.jinjuback.model.Product;
-import com.aguang.jinjuback.pojo.common.PageInfo;
+import com.aguang.jinjuback.model.po.Product;
+import com.aguang.jinjuback.model.pojo.common.PageInfo;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

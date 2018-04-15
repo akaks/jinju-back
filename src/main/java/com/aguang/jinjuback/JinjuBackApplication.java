@@ -11,9 +11,11 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -25,6 +27,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
+//@EnableWebSecurity
 @ImportResource(locations={"classpath:spring-security.xml"})
 public class JinjuBackApplication extends WebMvcConfigurerAdapter {
 
@@ -71,5 +74,11 @@ public class JinjuBackApplication extends WebMvcConfigurerAdapter {
 	@LoadBalanced
 	RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+
+	@Bean
+	TaskExecutor taskExecutor() {
+		TaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		return taskExecutor;
 	}
 }

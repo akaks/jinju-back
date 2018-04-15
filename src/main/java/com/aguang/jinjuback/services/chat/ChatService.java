@@ -1,8 +1,8 @@
 package com.aguang.jinjuback.services.chat;
 
-import com.aguang.jinjuback.configuration.CustomException;
+import com.aguang.jinjuback.config.exception.CustomException;
 import com.aguang.jinjuback.dao.chat.ChatDao;
-import com.aguang.jinjuback.pojo.chat.ChatMessage;
+import com.aguang.jinjuback.model.pojo.chat.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

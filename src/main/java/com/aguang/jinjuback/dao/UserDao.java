@@ -1,9 +1,11 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.User;
-import com.aguang.jinjuback.pojo.UserInfo;
+import com.aguang.jinjuback.model.po.User;
+import com.aguang.jinjuback.model.pojo.UserInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.Set;
 
 @Mapper
 @Repository
@@ -38,4 +40,20 @@ public interface UserDao {
      */
     @Update("update jinju_db.jj_user set photo_url=#{photoUrl} where user_id=#{id}")
     void updatePhotoUrl(@Param("id") Integer id, @Param("photoUrl") String photoUrl);
+
+    /**
+     * 根据username获取权限
+     * @param username
+     * @return
+     */
+    @Select(value = "SELECT a.authority_name" +
+            " FROM jj_user u" +
+            " LEFT JOIN sys_user_role ur ON u.user_id = ur.user_id" +
+            " LEFT JOIN sys_role_authority ra ON ur.role_id = ra.role_id" +
+            " LEFT JOIN sys_authority a ON ra.authority_id = a.id" +
+            " WHERE u.username = #{username}")
+    Set<String> selectAuthorityByName(String username);
+
+    @Select("select * from jj_user where username=#{username}")
+    User loadUserByUsername(String username);
 }

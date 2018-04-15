@@ -25,7 +25,7 @@ public class SpiderTimer {
     /**
      * 定时每天18点
      */
-    @Scheduled(cron = "0 27 18 * * ?")
+    @Scheduled(cron = "0 0 18 * * ?")
     public void timer() {
 
         //获取当前时间
@@ -42,6 +42,13 @@ public class SpiderTimer {
         // 1次budejie
         spiderService.doBudejie();
 
+        // 5次qiushibaike
+        for (int i = 0; i < 5; i++) {
+            spiderService.doQiushibaike();
+        }
+
+        // 1次pengfu
+        spiderService.doPengfu();
 
         logger.info("抓取数据.....end..........");
     }
