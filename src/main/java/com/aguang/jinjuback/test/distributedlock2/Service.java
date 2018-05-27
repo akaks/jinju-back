@@ -1,4 +1,4 @@
-package com.aguang.jinjuback.test.fenbushisuo;
+package com.aguang.jinjuback.test.distributedlock2;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -23,8 +23,6 @@ public class Service {
 		pool = new JedisPool(config, "47.100.177.183", 8936, 3000);
 	}
 
-
-
 	private DistributedLock lock = new DistributedLock(pool);
 
 	int n = 500;
@@ -32,8 +30,18 @@ public class Service {
 
 	public void seckill() {
 		// 返回锁的value值，供释放锁时候进行判断
-		String identifier = lock.lockWithTimeout("resource", 5000, 1000);
+		String identifier = lock.lock("resource");
+
+		if(identifier == null) {
+			System.out.println("error: identifier is null!");
+			return;
+		}
 		System.out.println(Thread.currentThread().getName() + "获得了锁");
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		System.out.println(--n);
 		lock.releaseLock("resource", identifier);
 	}

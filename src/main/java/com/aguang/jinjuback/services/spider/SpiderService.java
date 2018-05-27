@@ -16,6 +16,10 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 @Service
 public class SpiderService {
@@ -166,6 +170,82 @@ public class SpiderService {
                 createAdJinju(text, AdJinjuSourceConstant.PENGFU);
             }
         }
+    }
+
+    public String DOU_LUO = "http://www.tangsanshu.com/manhua/01/%s.html";
+    public String TEMPLATE = "D:\\workspace\\jinju-back\\src\\main\\resources\\templates\\template.html";
+    public String TEMPLATE_HTML = "C:\\apache-tomcat-7.0.69\\webapps\\templates\\%s.html";
+
+    /**
+     *
+     */
+    public void doDouluo() {
+
+        for (int i = 17; i <= 50; i++) {
+
+            File templateFile = new File(TEMPLATE);
+
+            Document document2 = HtmlUtils.getHtmlTextByFile(templateFile);
+
+            //document2.select("body").append("<img src=\"http://img.tangsanshu.com/comic/0017/1.jpg\"></br>");
+
+            for (int j = 0; j <= 25; j++) {
+
+                String url;
+                if(j == 0) {
+                    url = String.format(DOU_LUO, i + "");
+                } else {
+                    url = String.format(DOU_LUO, i + "_" +j);
+                }
+
+                // 抓取网页
+                Document document = HtmlUtils.getHtmlTextByUrl(url, "UTF-8");
+
+                if(document == null) {
+                    continue;
+                }
+
+                // 解析标签
+                Elements elements = document.select("div[class='mh_comicpic']");
+
+                if (elements == null) {
+                    LOG.error("elements is null !");
+                    continue;
+                }
+
+                // 遍历标签元素
+                for (Element element : elements) {
+//                    String text = element.select("img").attr("src");
+
+                    String img = element.select("img").toString();
+                    LOG.info(img.toString());
+                    document2.select("body").append(img + "</br>");
+                }
+            }
+
+            document2.select("body").append(String.format("<a href=\"%s.html\" >下一章</a>", i+1));
+            writeHtml(document2.toString(), String.format(TEMPLATE_HTML, i));
+        }
+    }
+
+    private void writeHtml(String htmlStr, String fileStr) {
+
+        File file = new File(fileStr);
+
+        if(file.exists()) {
+            file.delete();
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file)) ;
+            writer.write(htmlStr);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**

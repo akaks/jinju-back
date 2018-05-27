@@ -1,4 +1,4 @@
-package com.aguang.jinjuback.test.fenbushisuo;
+package com.aguang.jinjuback.test.distributedlock;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

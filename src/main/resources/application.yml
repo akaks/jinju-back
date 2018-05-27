@@ -46,7 +46,8 @@ logging:
     spring:
       springboot:
         dao: DEBUG
-    com.dy.springboot.server.mapper: debug
+    org: WARN
+#    com.dy.springboot.server.mapper: debug
 
 #spring.redis.host=192.168.22.221
 #spring.redis.port=6379

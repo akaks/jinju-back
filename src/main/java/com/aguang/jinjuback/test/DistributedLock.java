@@ -3,7 +3,7 @@ package com.aguang.jinjuback.test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Demo {
+public class DistributedLock {
     public static void main(String[] args) {
         ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
         for (int i = 0; i < 10; i++) {

@@ -1,4 +1,4 @@
-package com.aguang.jinjuback.test.fenbushisuo;
+package com.aguang.jinjuback.test.distributedlock2;
 
 class ThreadA extends Thread {
 	private Service service;
@@ -16,7 +16,7 @@ class ThreadA extends Thread {
 public class Test {
 	public static void main(String[] args) {
 		Service service = new Service();
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 10; i++) {
 			ThreadA threadA = new ThreadA(service);
 			threadA.start();
 		}

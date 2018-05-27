@@ -1,13 +1,19 @@
 package com.aguang.jinjuback.utils;
 
+import com.aguang.jinjuback.services.AreaInfoService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class HtmlUtils {
+
+    public final static Logger logger = LoggerFactory.getLogger(AreaInfoService.class);
 
     /**
      * 根据url从网络获取网页文本
@@ -33,13 +39,30 @@ public class HtmlUtils {
             doc = Jsoup.parse(new URL(url).openStream(), charsetName, url);
 
 
+        } catch (Exception e) {
+            logger.error("无该URL!");
+//            try {
+//                doc = Jsoup.connect(url).timeout(5000000).get();
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
+        }
+        return doc;
+    }
+
+    public static Document getHtmlTextByFile(File file) {
+        return getHtmlTextByFile(file, "UTF-8");
+    }
+
+    /**
+     *
+     */
+    public static Document getHtmlTextByFile(File file, String charsetName) {
+        Document doc = null;
+        try {
+            doc = Jsoup.parse(file, charsetName);
         } catch (IOException e) {
             e.printStackTrace();
-            try {
-                doc = Jsoup.connect(url).timeout(5000000).get();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
         }
         return doc;
     }

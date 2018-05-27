@@ -44,4 +44,14 @@ public class SpiderController extends BaseController {
         spiderService.doPengfu();
         return Result.ok();
     }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/douluo")
+    public Result doDouluo() {
+        spiderService.doDouluo();
+        return Result.ok();
+    }
 }
