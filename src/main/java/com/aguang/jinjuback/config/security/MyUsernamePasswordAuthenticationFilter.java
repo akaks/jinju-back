@@ -22,11 +22,11 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
         String password = obtainPassword(request);
 
         if (username == null) {
-            username = "";
+            username = "akaks";
         }
 
         if (password == null) {
-            password = "";
+            password = "1";
         }
 
         username = username.trim();

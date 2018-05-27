@@ -2,14 +2,19 @@ package com.aguang.jinjuback.model.po;
 
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
  * 金句表（jinju）
  */
+@Table(name = "jinju")
 public class Jinju {
 
     /* 主键 */
+    @Id
     private Integer jinjuId;
 
     /* 类型 */
@@ -39,6 +44,7 @@ public class Jinju {
     private long createTime;
 
     /* 更新时间 */
+    @Column(name = "update_time", updatable = false)
     private long updateTime;
 
     /* 区分删除 1：删除 0：未删除 */

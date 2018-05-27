@@ -1,16 +1,17 @@
 package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.config.exception.CustomException;
+import com.aguang.jinjuback.dao.JinjiuDao;
 import com.aguang.jinjuback.dao.JinjuDao;
-import com.aguang.jinjuback.model.po.JinjuComment;
+import com.aguang.jinjuback.model.constants.ConfirmOrCalcelConstant;
+import com.aguang.jinjuback.model.constants.IsDeleteConstant;
+import com.aguang.jinjuback.model.constants.VoteConstant;
 import com.aguang.jinjuback.model.po.Jinju;
+import com.aguang.jinjuback.model.po.JinjuComment;
 import com.aguang.jinjuback.model.pojo.JinjuCommentInfo;
 import com.aguang.jinjuback.model.pojo.JinjuInfo;
 import com.aguang.jinjuback.model.pojo.Result;
 import com.aguang.jinjuback.model.pojo.common.PageInfo;
-import com.aguang.jinjuback.model.constants.ConfirmOrCalcelConstant;
-import com.aguang.jinjuback.model.constants.IsDeleteConstant;
-import com.aguang.jinjuback.model.constants.VoteConstant;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 
+//import com.aguang.jinjuback.dao.JinjiuDao;
+
 @Service
 public class JinjuService {
 
@@ -28,6 +31,25 @@ public class JinjuService {
 
     @Autowired
     JinjuDao jinjuDao;
+
+    @Autowired
+    JinjiuDao jinjiuDao;
+
+    /**
+     * 创建金句
+     * @param jinju
+     * @param userId
+     * @return
+     */
+    public Result createJinju2(Jinju jinju, Integer userId) {
+        try {
+            int insert = jinjiuDao.insert(jinju);
+            System.out.println(insert);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 创建金句

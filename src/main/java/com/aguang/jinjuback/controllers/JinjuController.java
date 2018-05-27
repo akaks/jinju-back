@@ -47,6 +47,21 @@ public class JinjuController extends BaseController {
     }
 
     /**
+     * 创建金句
+     * @param jinju
+     * @return
+     */
+    @PostMapping("/create2")
+    public Result create2(@RequestBody  @Valid Jinju jinju, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return jinjuService.createJinju2(jinju, getUserId());
+    }
+
+    /**
      * 获取金句信息
      * @param id
      * @return
