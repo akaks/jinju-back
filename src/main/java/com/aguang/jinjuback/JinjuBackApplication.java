@@ -10,7 +10,6 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -28,7 +27,7 @@ import java.util.List;
 @EnableScheduling
 @EnableTransactionManagement
 //@EnableWebSecurity
-@ImportResource(locations={"classpath:spring-security.xml"})
+//@ImportResource(locations={"classpath:spring-security.xml"})
 public class JinjuBackApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) {
